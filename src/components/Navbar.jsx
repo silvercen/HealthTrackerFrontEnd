@@ -1,17 +1,18 @@
-import React from "react";
+import React from "react"; 
+import IconHeartbeat from "../assets/IconHeartBeat";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   return (
     <>
       <nav className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Left side - Logo and App Name */}
-            <div className="flex items-center">
-              <img
-                className="h-8 w-8"
-                src="https://tailwindui.com/plus/img/logos/mark.svg?color=indigo&shade=500"
-                alt="HealthTrackerApp logo"
+            <div className="flex items-center" onClick={() => navigate(`/`)}>
+              <IconHeartbeat
+                style={{ width: "24px", height: "24px", color: "#ff0000" }}
               />
               <span className="text-black ml-2 text-lg font-semibold">
                 HealthTrackerApp
@@ -29,12 +30,14 @@ const Navbar = () => {
               <a
                 href="#fitness"
                 className="text-black hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                onClick={() => navigate(`/fitness`)}
               >
                 Fitness
               </a>
               <a
                 href="#diet"
                 className="text-black hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                onClick={() => navigate(`/diet`)}
               >
                 Diet
               </a>

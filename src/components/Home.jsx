@@ -1,17 +1,12 @@
-import React from 'react'
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import IconGym from "../assets/IconGym";
+import IconFoodOutline from "../assets/IconFoodOutline";
+import IconMentalHealthFill from "../assets/IconMentalHealthFill";
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
-    // <div>
-    //   <div className="py-20 md:py-32 text-center">
-    //     <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-    //       Health Tracker
-    //       <span className="block bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-800">
-    //         Application
-    //       </span>
-    //     </h1>
-    //   </div>
-    // </div>
     <div className="bg-gray-50 min-h-screen">
       {/* Hero Section */}
       <header className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white py-20">
@@ -23,10 +18,16 @@ const Home = () => {
             Track your fitness, diet, and mental well-being in one place.
           </p>
           <div className="mt-8 space-x-4">
-            <button className="bg-white text-indigo-600 font-semibold px-6 py-2 rounded-md shadow-md hover:bg-gray-200 transition">
+            <button
+              className="bg-white text-indigo-600 font-semibold px-6 py-2 rounded-md shadow-md hover:bg-gray-200 transition"
+              onClick={() => navigate(`/signup`)}
+            >
               Sign Up
             </button>
-            <button className="bg-transparent border-2 border-white text-white font-semibold px-6 py-2 rounded-md hover:bg-white hover:text-indigo-600 transition">
+            <button
+              className="bg-transparent border-2 border-white text-white font-semibold px-6 py-2 rounded-md hover:bg-white hover:text-indigo-600 transition"
+              onClick={() => navigate(`/login`)}
+            >
               Login
             </button>
           </div>
@@ -42,9 +43,12 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Card 1 - Fitness Tracking */}
             <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-              <h3 className="text-xl font-semibold text-indigo-600">
-                Fitness Tracking
-              </h3>
+              <div className="flex items-center space-x-2">
+                <h3 className="text-xl font-semibold text-indigo-600">
+                  Fitness Tracking
+                </h3>
+                <IconGym />
+              </div>
               <p className="mt-2 text-gray-600">
                 Log your workouts, set fitness goals, and track your progress
                 with personalized insights.
@@ -53,9 +57,12 @@ const Home = () => {
 
             {/* Card 2 - Diet Management */}
             <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-              <h3 className="text-xl font-semibold text-indigo-600">
-                Diet Management
-              </h3>
+              <div className="flex items-center space-x-2">
+                <h3 className="text-xl font-semibold text-indigo-600">
+                  Diet Management
+                </h3>
+                <IconFoodOutline />
+              </div>
               <p className="mt-2 text-gray-600">
                 Maintain a balanced diet with calorie tracking and meal
                 recommendations tailored to your goals.
@@ -64,9 +71,12 @@ const Home = () => {
 
             {/* Card 3 - Well-being Insights */}
             <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-              <h3 className="text-xl font-semibold text-indigo-600">
-                Well-being Insights
-              </h3>
+              <div className="flex items-center space-x-2">
+                <h3 className="text-xl font-semibold text-indigo-600">
+                  Well-being Insights
+                </h3>
+                <IconMentalHealthFill />
+              </div>
               <p className="mt-2 text-gray-600">
                 Monitor your mental health with mood tracking and self-care
                 reminders to ensure holistic wellness.
@@ -77,6 +87,6 @@ const Home = () => {
       </section>
     </div>
   );
-}
+};
 
-export default Home
+export default Home;
