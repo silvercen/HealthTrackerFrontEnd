@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AddCustomWorkout from "./AddCustomWorkout";
 
 // Mock workout data to simulate fetching from an API
 const workoutOptions = [
@@ -23,6 +24,11 @@ const Fitness = () => {
     setSelectedWorkout("");
   };
 
+  // Handle adding a custom workout
+  const addCustomWorkout = (workout) => {
+    setWorkoutList([...workoutList, workout]);
+  };
+
   // Calculate total calories whenever workoutList changes
   useEffect(() => {
     const total = workoutList.reduce(
@@ -38,6 +44,9 @@ const Fitness = () => {
         <h2 className="text-3xl font-bold text-center mb-8 text-indigo-600">
           Daily Workout Tracker
         </h2>
+
+        {/* Add Custom Workout Section */}
+        <AddCustomWorkout onAddCustomWorkout={addCustomWorkout} />
 
         {/* Add Workout Section */}
         <div className="bg-white shadow-md rounded-lg p-6 mb-8">

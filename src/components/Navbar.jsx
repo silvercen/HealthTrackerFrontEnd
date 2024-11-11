@@ -22,28 +22,29 @@ const Navbar = () => {
             {/* Right side - Navigation Links */}
             <div className="hidden md:flex items-center space-x-4">
               <a
-                href="#dashboard"
+                
                 className="text-black hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
               >
                 Dashboard
               </a>
               <a
-                href="#fitness"
+                
                 className="text-black hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 onClick={() => navigate(`/fitness`)}
               >
                 Fitness
               </a>
               <a
-                href="#diet"
+                
                 className="text-black hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 onClick={() => navigate(`/diet`)}
               >
                 Diet
               </a>
               <a
-                href="#wellbeing"
+                
                 className="text-black hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                onClick={()=>navigate(`/wellbeing`)}
               >
                 Wellbeing
               </a>

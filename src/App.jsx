@@ -4,6 +4,7 @@ import Fitness from "./components/Fitness";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Diet from "./components/Diet";
+import WellBeing from "./components/WellBeing";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/diet" element={<Diet />} />
-
+            <Route path="/wellbeing" element={<WellBeing />} />
           </Routes>
         </Router>
       </div>

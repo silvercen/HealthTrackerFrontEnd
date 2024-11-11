@@ -33,54 +33,74 @@ const Home = () => {
           </div>
         </div>
       </header>
-
       {/* Features Section */}
-      <section className="py-16">
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-8">
             What We Offer
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Card 1 - Fitness Tracking */}
-            <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-              <div className="flex items-center space-x-2">
-                <h3 className="text-xl font-semibold text-indigo-600">
-                  Fitness Tracking
-                </h3>
-                <IconGym />
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden group hover:shadow-2xl transition">
+              <div className="relative h-56">
+                <img
+                  className="w-full h-full object-cover group-hover:scale-105 transition-all"
+                  src="https://via.placeholder.com/400x250?text=Fitness+Tracking"
+                  alt="Fitness Tracking"
+                />
               </div>
-              <p className="mt-2 text-gray-600">
-                Log your workouts, set fitness goals, and track your progress
-                with personalized insights.
-              </p>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-indigo-600 flex items-center space-x-2">
+                  <IconGym />
+                  <span>Fitness Tracking</span>
+                </h3>
+                <p className="mt-2 text-gray-600">
+                  Log your workouts, set fitness goals, and track your progress
+                  with personalized insights.
+                </p>
+              </div>
             </div>
 
             {/* Card 2 - Diet Management */}
-            <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-              <div className="flex items-center space-x-2">
-                <h3 className="text-xl font-semibold text-indigo-600">
-                  Diet Management
-                </h3>
-                <IconFoodOutline />
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden group hover:shadow-2xl transition">
+              <div className="relative h-56">
+                <img
+                  className="w-full h-full object-cover group-hover:scale-105 transition-all"
+                  src="https://via.placeholder.com/400x250?text=Diet+Management"
+                  alt="Diet Management"
+                />
               </div>
-              <p className="mt-2 text-gray-600">
-                Maintain a balanced diet with calorie tracking and meal
-                recommendations tailored to your goals.
-              </p>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-indigo-600 flex items-center space-x-2">
+                  <IconFoodOutline />
+                  <span>Diet Management</span>
+                </h3>
+                <p className="mt-2 text-gray-600">
+                  Maintain a balanced diet with calorie tracking and meal
+                  recommendations tailored to your goals.
+                </p>
+              </div>
             </div>
 
             {/* Card 3 - Well-being Insights */}
-            <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition">
-              <div className="flex items-center space-x-2">
-                <h3 className="text-xl font-semibold text-indigo-600">
-                  Well-being Insights
-                </h3>
-                <IconMentalHealthFill />
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden group hover:shadow-2xl transition">
+              <div className="relative h-56">
+                <img
+                  className="w-full h-full object-cover group-hover:scale-105 transition-all"
+                  src="https://via.placeholder.com/400x250?text=Well-being+Insights"
+                  alt="Well-being Insights"
+                />
               </div>
-              <p className="mt-2 text-gray-600">
-                Monitor your mental health with mood tracking and self-care
-                reminders to ensure holistic wellness.
-              </p>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-indigo-600 flex items-center space-x-2">
+                  <IconMentalHealthFill />
+                  <span>Well-being Insights</span>
+                </h3>
+                <p className="mt-2 text-gray-600">
+                  Monitor your mental health with mood tracking and self-care
+                  reminders to ensure holistic wellness.
+                </p>
+              </div>
             </div>
           </div>
         </div>

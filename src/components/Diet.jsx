@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AddCustomFood from "./AddCustomFood";
 
 // Mock food data to simulate fetching from an API
 const foodOptions = [
@@ -23,6 +24,11 @@ const Diet = () => {
     setSelectedFood("");
   };
 
+  // Add custom food item
+  const addCustomFood = (customFood) => {
+    setFoodList([...foodList, customFood]);
+  };
+
   // Calculate total calories whenever foodList changes
   useEffect(() => {
     const total = foodList.reduce((sum, food) => sum + food.calories, 0);
@@ -32,7 +38,7 @@ const Diet = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-10">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-center mb-8 text-green-600">
+        <h2 className="text-3xl font-bold text-center mb-8  text-indigo-600">
           Daily Diet Tracker
         </h2>
 
@@ -43,7 +49,7 @@ const Diet = () => {
           </h3>
           <div className="flex items-center space-x-4">
             <select
-              className="border border-gray-300 rounded-md p-2 w-full focus:ring-green-500 focus:border-green-500"
+              className="border border-gray-300 rounded-md p-2 w-full focus:ring-indigo-500 focus:border-indigo-500"
               value={selectedFood}
               onChange={(e) => setSelectedFood(e.target.value)}
             >
@@ -56,12 +62,15 @@ const Diet = () => {
             </select>
             <button
               onClick={addFood}
-              className="bg-green-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-green-500 transition"
+              className="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-indigo-500 transition"
             >
               Add
             </button>
           </div>
         </div>
+
+        {/* Add Custom Food Section */}
+        <AddCustomFood addCustomFood={addCustomFood} />
 
         {/* Food List and Total Calories Section */}
         <div className="bg-white shadow-md rounded-lg p-6">
@@ -88,7 +97,7 @@ const Diet = () => {
             <span className="text-lg font-semibold text-gray-700">
               Total Calories Consumed
             </span>
-            <span className="text-lg font-bold text-green-600">
+            <span className="text-lg font-bold text-indigo-600">
               {totalCalories} kcal
             </span>
           </div>
