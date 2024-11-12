@@ -1,22 +1,96 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate()
+  const [tmpEmail, setTmpEmail] = useState("");
+  const [tmpPassword, setTmpPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const {login} = useAuth()
+  const [auth, setAuth] = useState({
+    email: "",
+    password: "",
+    role: {
+      roleId: "1",
+      roleName: "USER"
+    }
+  });
 
-  const handleSignup = (e) => {
+  async function register(auth)
+  {
+    try {
+      console.log(auth)
+      let response = await fetch('http://localhost:9088/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(auth)
+      })
+
+      let responseText = await response.text()
+
+      if(responseText === 'User saved successfully')
+      {
+        response = await fetch('http://localhost:9088/auth/validate/user',{
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json'},
+          body: JSON.stringify(auth)
+        })
+
+        let responseToken = await response.text()
+        console.log(responseToken)
+
+        if(responseToken!=null)
+        {
+          sessionStorage.setItem('token',responseToken)
+          sessionStorage.setItem('email',auth.email)
+          login()
+          return true
+        }
+        setError("Failed to register user");
+        return false;
+        
+      }
+      else if(responseText==='User already exists')
+      {
+        setError("User with email already exists");
+        return false;
+      }
+      return false
+    }
+    catch (e) {
+      console.error("Error registering user:", e);
+      setError("Failed to register user");
+    }
+  }
+
+  const handleSignup = async (e) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (tmpPassword !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
-    // Handle signup logic here
-    console.log("Signup successful:", { email, password });
-    setError("");
+    setAuth(prevAuth => ({
+      ...prevAuth,
+      email: tmpEmail,
+      password: tmpPassword
+    }))
+
+    if(auth.email !== "" && auth.password !== "")
+    {
+      if(await register(auth) === true)
+      {
+        console.log("Signup successful and logged in");
+        navigate('/')
+      }
+      else
+      {
+        console.log("Signup failed");
+      }
+    }
   };
 
   return (
@@ -34,8 +108,8 @@ const Signup = () => {
             <input
               type="email"
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-indigo-500 focus:border-indigo-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={tmpEmail}
+              onChange={(e) => setTmpEmail(e.target.value)}
               required
             />
           </div>
@@ -45,8 +119,8 @@ const Signup = () => {
             <input
               type="password"
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-indigo-500 focus:border-indigo-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={tmpPassword}
+              onChange={(e) => setTmpPassword(e.target.value)}
               required
             />
           </div>

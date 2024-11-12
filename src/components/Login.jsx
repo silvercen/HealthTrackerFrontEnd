@@ -1,14 +1,44 @@
 import React, { useState } from "react";
+import { useAuth } from "./AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate()
+  const {login} = useAuth();
+  const [auth, setAuth] = useState({
+    email: "",
+    password: ""
+  });
 
-  const handleLogin = (e) => {
+  async function logIn()
+  {
+    let Token = "";
+    try
+    {
+      await fetch("http://localhost:9088/auth/validate/user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(auth)
+      })
+      .then((response) => response.text())
+      .then((token) => {
+        Token = token;
+        sessionStorage.setItem("token", token)
+        login()
+        navigate('/')
+      })
+    }
+    catch (error)
+    {
+      console.error("Error occurred while logging in:", error.message);
+    }
+  }
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-
-    // Handle login logic here
-    console.log("Login successful:", { email, password });
+    await logIn()
   };
 
   return (

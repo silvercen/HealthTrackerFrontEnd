@@ -6,9 +6,11 @@ import Login from "./components/Login";
 import Diet from "./components/Diet";
 import WellBeing from "./components/WellBeing";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./components/AuthContext";
 function App() {
   return (
     <>
+    <AuthProvider>
       <div className="min-h-screen bg-white">
         <Router>
         <Navbar />
@@ -22,6 +24,7 @@ function App() {
           </Routes>
         </Router>
       </div>
+    </AuthProvider>
     </>
   );
 }
