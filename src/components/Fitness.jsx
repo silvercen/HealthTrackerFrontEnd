@@ -39,7 +39,7 @@ const Fitness = () => {
   }, [workoutList]);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10">
+    <div className="min-h-screen bg-Grey py-10">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-center mb-8 text-indigo-600">
           Daily Workout Tracker
