@@ -40,7 +40,6 @@ const Navbar = () => {
                 />
                 </>)
     }
-    console.log(content)
   }, [])
 
   return (

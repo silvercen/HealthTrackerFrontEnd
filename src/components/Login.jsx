@@ -3,15 +3,15 @@ import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [tmpEmail, setTmpEmail] = useState("");
+  const [tmpPassword, setTmpPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate()
   const {login} = useAuth();
-  const [auth, setAuth] = useState({
-    email: "",
-    password: ""
-  });
+  const auth = {
+    email: tmpEmail,
+    password: tmpPassword
+  };
 
   async function logIn()
   {
@@ -28,9 +28,8 @@ const Login = () => {
         Token = token;
         sessionStorage.setItem("token", token)
         login()
-        return true
       })
-      return false
+      return true
     }
     catch (error)
     {
@@ -48,12 +47,11 @@ const Login = () => {
         method: "GET",
         headers: { "Content-Type": "application/json"}
       })
-     .then((response) => response.json())
+     .then((response) => response.text())
      .then((userId) => {
        sessionStorage.setItem("userId", userId)
-       return true
      })
-     return false
+     return true
     }
     catch (error)
     {
@@ -65,9 +63,12 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if(await logIn() === true && await setUserId() === true)
+    if(await logIn() === true)
     {
-      navigate('/dashboard')
+      if(await setUserId() === true)
+      {
+        navigate('/dashboard')
+      }
     }
   };
 
@@ -84,8 +85,8 @@ const Login = () => {
             <input
               type="email"
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-indigo-500 focus:border-indigo-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={tmpEmail}
+              onChange={(e) => setTmpEmail(e.target.value)}
               required
             />
           </div>
@@ -95,8 +96,8 @@ const Login = () => {
             <input
               type="password"
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-indigo-500 focus:border-indigo-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={tmpPassword}
+              onChange={(e) => setTmpPassword(e.target.value)}
               required
             />
           </div>

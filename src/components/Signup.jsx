@@ -9,14 +9,14 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const {login} = useAuth()
-  const [auth, setAuth] = useState({
-    email: "",
-    password: "",
+  const auth = {
+    email: tmpEmail,
+    password: tmpPassword,
     role: {
       roleId: "1",
       roleName: "USER"
     }
-  });
+  };
 
   async function register(auth)
   {
@@ -69,15 +69,14 @@ const Signup = () => {
     try
     {
       await fetch("http://localhost:9088/auth/"+auth.email, {
-        method: "GET",
-        headers: { "Content-Type": "application/json"}
+        method: "GET"
       })
-     .then((response) => response.json())
+     .then((response) => response.text())
      .then((userId) => {
+       console.log(userId)
        sessionStorage.setItem("userId", userId)
-       return true
      })
-     return false
+     return true
     }
     catch (error)
     {
@@ -95,23 +94,20 @@ const Signup = () => {
       return;
     }
 
-    setAuth(prevAuth => ({
-      ...prevAuth,
-      email: tmpEmail,
-      password: tmpPassword
-    }))
-
     if(auth.email !== "" && auth.password !== "")
     {
-      if(await register(auth) === true && setUserId === true)
+      if(await register(auth) === true)
       {
-        console.log("Signup successful and logged in");
-        navigate('/dashboard')
-      }
-      else if(await register(auth) === true)
-      {
-        console.log("Signup successful");
-        navigate('/login')
+        if(await setUserId() === true)
+        {
+          console.log("Signup successful and logged in");
+          navigate(`/dashboard`)
+        }
+        else
+        {
+          console.log("Signup successful");
+          navigate(`/login`)
+        }
       }
       else
       {
