@@ -64,6 +64,28 @@ const Signup = () => {
       setError("Failed to register user");
     }
   }
+  async function setUserId()
+  {
+    try
+    {
+      await fetch("http://localhost:9088/auth/"+auth.email, {
+        method: "GET",
+        headers: { "Content-Type": "application/json"}
+      })
+     .then((response) => response.json())
+     .then((userId) => {
+       sessionStorage.setItem("userId", userId)
+       return true
+     })
+     return false
+    }
+    catch (error)
+    {
+      console.error("Error occurred while setting user ID:", error.message);
+      setError("Failed to set user ID");
+    }
+    return false
+  }
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -81,10 +103,15 @@ const Signup = () => {
 
     if(auth.email !== "" && auth.password !== "")
     {
-      if(await register(auth) === true)
+      if(await register(auth) === true && setUserId === true)
       {
         console.log("Signup successful and logged in");
-        navigate('/')
+        navigate('/dashboard')
+      }
+      else if(await register(auth) === true)
+      {
+        console.log("Signup successful");
+        navigate('/login')
       }
       else
       {

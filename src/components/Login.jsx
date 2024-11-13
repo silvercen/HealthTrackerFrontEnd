@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate()
   const {login} = useAuth();
   const [auth, setAuth] = useState({
@@ -27,18 +28,47 @@ const Login = () => {
         Token = token;
         sessionStorage.setItem("token", token)
         login()
-        navigate('/')
+        return true
       })
+      return false
     }
     catch (error)
     {
       console.error("Error occurred while logging in:", error.message);
+      setError("Failed to login user");
     }
+    return false
+  }
+
+  async function setUserId()
+  {
+    try
+    {
+      await fetch("http://localhost:9088/auth/"+auth.email, {
+        method: "GET",
+        headers: { "Content-Type": "application/json"}
+      })
+     .then((response) => response.json())
+     .then((userId) => {
+       sessionStorage.setItem("userId", userId)
+       return true
+     })
+     return false
+    }
+    catch (error)
+    {
+      console.error("Error occurred while setting user ID:", error.message);
+      setError("Failed to set user ID");
+    }
+    return false
   }
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    await logIn()
+    if(await logIn() === true && await setUserId() === true)
+    {
+      navigate('/dashboard')
+    }
   };
 
   return (

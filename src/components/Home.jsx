@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import IconGym from "../assets/IconGym";
 import IconFoodOutline from "../assets/IconFoodOutline";
 import IconMentalHealthFill from "../assets/IconMentalHealthFill";
+import { useAuth } from "./AuthContext";
 
 const Home = () => {
   const navigate = useNavigate();
+  const {isLoggedIn} = useAuth()
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate(`/dashboard`)
+    }
+  })
+
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Hero Section bg-gradient-to-r from-indigo-600 to-blue-500 */}
@@ -45,7 +54,7 @@ const Home = () => {
               <div className="relative h-56">
                 <img
                   className="w-full h-full object-cover group-hover:scale-105 transition-all"
-                  src="https://via.placeholder.com/400x250?text=Fitness+Tracking"
+                  src="/fitness_image.jpeg"
                   alt="Fitness Tracking"
                 />
               </div>
@@ -66,7 +75,7 @@ const Home = () => {
               <div className="relative h-56">
                 <img
                   className="w-full h-full object-cover group-hover:scale-105 transition-all"
-                  src="https://via.placeholder.com/400x250?text=Diet+Management"
+                  src="/diet_image.jpeg"
                   alt="Diet Management"
                 />
               </div>
@@ -87,7 +96,7 @@ const Home = () => {
               <div className="relative h-56">
                 <img
                   className="w-full h-full object-cover group-hover:scale-105 transition-all"
-                  src="https://via.placeholder.com/400x250?text=Well-being+Insights"
+                  src="/sleep_image.jpg"
                   alt="Well-being Insights"
                 />
               </div>
