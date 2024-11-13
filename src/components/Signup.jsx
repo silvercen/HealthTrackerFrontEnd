@@ -3,89 +3,79 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
 const Signup = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [tmpEmail, setTmpEmail] = useState("");
   const [tmpPassword, setTmpPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const {login} = useAuth()
-  const [auth, setAuth] = useState({
-    email: "",
-    password: "",
+  const { login } = useAuth();
+
+  const authData = {
+    email: tmpEmail,
+    password: tmpPassword,
     role: {
       roleId: "1",
-      roleName: "USER"
-    }
-  });
+      roleName: "USER",
+    },
+  };
 
-  async function register(auth)
-  {
+  const register = async (auth) => {
     try {
-      console.log(auth)
-      let response = await fetch('http://localhost:9088/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(auth)
-      })
+      const response = await fetch("http://localhost:9088/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(auth),
+      });
 
-      let responseText = await response.text()
+      const responseText = await response.text();
 
-      if(responseText === 'User saved successfully')
-      {
-        response = await fetch('http://localhost:9088/auth/validate/user',{
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json'},
-          body: JSON.stringify(auth)
-        })
-
-        let responseToken = await response.text()
-        console.log(responseToken)
-
-        if(responseToken!=null)
-        {
-          sessionStorage.setItem('token',responseToken)
-          sessionStorage.setItem('email',auth.email)
-          login()
-          return true
-        }
-        setError("Failed to register user");
-        return false;
-        
-      }
-      else if(responseText==='User already exists')
-      {
+      if (responseText === "User saved successfully") {
+        return true;
+      } else if (responseText === "User already exists") {
         setError("User with email already exists");
         return false;
+      } else {
+        setError("Failed to register user");
+        return false;
       }
-      return false
-    }
-    catch (e) {
+    } catch (e) {
       console.error("Error registering user:", e);
       setError("Failed to register user");
+      return false;
     }
+  };
+
+const setUserId = async (email) => {
+  try {
+    const response = await fetch(`http://localhost:9088/auth/${email}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    // Check if the response is JSON
+    const contentType = response.headers.get("content-type");
+    let userId;
+
+    if (contentType && contentType.includes("application/json")) {
+      const data = await response.json();
+      userId = data.userId; // assuming API response has a userId field
+    } else {
+      // If not JSON, assume it's plain text
+      userId = await response.text();
+    }
+
+    if (userId) {
+      sessionStorage.setItem("userId", userId);
+      return true;
+    }
+    setError("Failed to retrieve user ID");
+    return false;
+  } catch (error) {
+    console.error("Error occurred while setting user ID:", error.message);
+    setError("Failed to set user ID");
+    return false;
   }
-  async function setUserId()
-  {
-    try
-    {
-      await fetch("http://localhost:9088/auth/"+auth.email, {
-        method: "GET",
-        headers: { "Content-Type": "application/json"}
-      })
-     .then((response) => response.json())
-     .then((userId) => {
-       sessionStorage.setItem("userId", userId)
-       return true
-     })
-     return false
-    }
-    catch (error)
-    {
-      console.error("Error occurred while setting user ID:", error.message);
-      setError("Failed to set user ID");
-    }
-    return false
-  }
+};
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -95,28 +85,20 @@ const Signup = () => {
       return;
     }
 
-    setAuth(prevAuth => ({
-      ...prevAuth,
-      email: tmpEmail,
-      password: tmpPassword
-    }))
+    const registrationSuccess = await register(authData);
 
-    if(auth.email !== "" && auth.password !== "")
-    {
-      if(await register(auth) === true && setUserId === true)
-      {
+    if (registrationSuccess) {
+      const userIdSet = await setUserId(tmpEmail);
+      if (userIdSet) {
+        login();
         console.log("Signup successful and logged in");
-        navigate('/dashboard')
+        navigate(`/dashboard`);
+      } else {
+        console.log("User registered but failed to set user ID");
+        navigate(`/login`);
       }
-      else if(await register(auth) === true)
-      {
-        console.log("Signup successful");
-        navigate('/login')
-      }
-      else
-      {
-        console.log("Signup failed");
-      }
+    } else {
+      console.log("Signup failed");
     }
   };
 

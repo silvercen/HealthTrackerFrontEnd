@@ -5,6 +5,7 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Diet from "./components/Diet";
 import WellBeing from "./components/WellBeing";
+import { Dashboard } from "./components/Dashboard";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./components/AuthContext";
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path="/fitness" element={<Fitness />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/diet" element={<Diet />} />
             <Route path="/wellbeing" element={<WellBeing />} />
           </Routes>
