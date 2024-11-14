@@ -39,23 +39,18 @@ const Fitness = () => {
   }, [workoutList]);
 
   return (
-    <div className="min-h-screen bg-Grey py-10">
+    <div className="min-h-screen bg-transparent text-white py-10 font-poppins">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-center mb-8 text-indigo-600">
+        <h2 className="text-3xl font-bold text-center mb-8 text-Quaternary">
           Daily Workout Tracker
         </h2>
 
-        {/* Add Custom Workout Section */}
-        <AddCustomWorkout onAddCustomWorkout={addCustomWorkout} />
-
         {/* Add Workout Section */}
-        <div className="bg-white shadow-md rounded-lg p-6 mb-8">
-          <h3 className="text-xl font-semibold mb-4 text-gray-700">
-            Add Workout
-          </h3>
+        <div className="bg-Grey bg-opacity-40 backdrop-blur-lg shadow-md rounded-lg p-6 mb-8 border border-Quaternary">
+          <h3 className="text-xl font-semibold mb-4 text-white">Add Workout</h3>
           <div className="flex items-center space-x-4">
             <select
-              className="border border-gray-300 rounded-md p-2 w-full focus:ring-indigo-500 focus:border-indigo-500"
+              className="border border-Grey  rounded-md p-2 w-full  text-Grey focus:ring-Quaternary focus:border-Quaternary"
               value={selectedWorkout}
               onChange={(e) => setSelectedWorkout(e.target.value)}
             >
@@ -68,16 +63,19 @@ const Fitness = () => {
             </select>
             <button
               onClick={addWorkout}
-              className="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-indigo-500 transition"
+              className="bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-Quaternary transition"
             >
               Add
             </button>
           </div>
         </div>
 
+        {/* Add Custom Workout Section */}
+        <AddCustomWorkout onAddCustomWorkout={addCustomWorkout} />
+
         {/* Workout List and Total Calories Section */}
-        <div className="bg-white shadow-md rounded-lg p-6">
-          <h3 className="text-xl font-semibold mb-4 text-gray-700">
+        <div className="bg-Grey shadow-lg bg-opacity-40 backdrop-blur-lg rounded-lg p-6 border border-Quaternary">
+          <h3 className="text-xl font-semibold mb-4 text-white">
             Workout Summary
           </h3>
           {workoutList.length === 0 ? (
@@ -87,22 +85,20 @@ const Fitness = () => {
               {workoutList.map((workout, index) => (
                 <li
                   key={index}
-                  className="flex justify-between items-center p-4 border-b border-gray-200"
+                  className="flex justify-between items-center p-4 border-b border-Grey"
                 >
-                  <span className="font-medium text-gray-800">
-                    {workout.name}
-                  </span>
-                  <span className="text-gray-600">{workout.calories} kcal</span>
+                  <span className="font-medium text-white">{workout.name}</span>
+                  <span className="text-gray-400">{workout.calories} kcal</span>
                 </li>
               ))}
             </ul>
           )}
           {/* Total Calories */}
-          <div className="flex justify-between items-center pt-4 border-t border-gray-200">
-            <span className="text-lg font-semibold text-gray-700">
+          <div className="flex justify-between items-center pt-4 border-t border-Grey">
+            <span className="text-lg font-semibold text-white">
               Total Calories Burned
             </span>
-            <span className="text-lg font-bold text-indigo-600">
+            <span className="text-lg font-bold text-Quaternary">
               {totalCalories} kcal
             </span>
           </div>

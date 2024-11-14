@@ -48,7 +48,7 @@ const AddCustomWorkout = ({ onAddCustomWorkout }) => {
   };
 
   return (
-    <div className="bg-black bg-opacity-40 backdrop-blur-lg shadow-xl rounded-lg p-6 mb-8">
+    <div className="bg-Grey border border-Quaternary bg-opacity-40 backdrop-blur-lg shadow-xl rounded-lg p-6 mb-8">
       <h3 className="text-xl font-semibold mb-4 text-white">
         Add Custom Workout
       </h3>
@@ -101,7 +101,7 @@ const AddCustomWorkout = ({ onAddCustomWorkout }) => {
           <div className="mt-4 flex justify-end">
             <button
               type="submit"
-              className="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-indigo-500 transition"
+              className="bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-Quaternary transition"
             >
               Add Workout
             </button>

@@ -72,18 +72,18 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-indigo-600">
+    <div className="min-h-screen flex items-center justify-center ">
+      <div className="bg-Grey  bg-opacity-40 backdrop-blur-lg  p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center text-Secondary">
           Login
         </h2>
 
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
+            <label className="block text-Secondary">Email</label>
             <input
               type="email"
-              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-Quaternary focus:border-Quaternary"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -91,10 +91,10 @@ const Login = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700">Password</label>
+            <label className="block text-Secondary">Password</label>
             <input
               type="password"
-              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-Quaternary focus:border-Quaternary"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -103,7 +103,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-500 transition"
+            className="w-full bg-Grey shadow-lg bg-opacity-40 backdrop-blur-lg  text-Secondary font-semibold py-2 rounded hover:bg-Quaternary transition"
           >
             Login
           </button>

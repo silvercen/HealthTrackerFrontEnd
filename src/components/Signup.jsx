@@ -45,37 +45,37 @@ const Signup = () => {
     }
   };
 
-const setUserId = async (email) => {
-  try {
-    const response = await fetch(`http://localhost:9088/auth/${email}`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
+  const setUserId = async (email) => {
+    try {
+      const response = await fetch(`http://localhost:9088/auth/${email}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
 
-    // Check if the response is JSON
-    const contentType = response.headers.get("content-type");
-    let userId;
+      // Check if the response is JSON
+      const contentType = response.headers.get("content-type");
+      let userId;
 
-    if (contentType && contentType.includes("application/json")) {
-      const data = await response.json();
-      userId = data.userId; // assuming API response has a userId field
-    } else {
-      // If not JSON, assume it's plain text
-      userId = await response.text();
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        userId = data.userId; // assuming API response has a userId field
+      } else {
+        // If not JSON, assume it's plain text
+        userId = await response.text();
+      }
+
+      if (userId) {
+        sessionStorage.setItem("userId", userId);
+        return true;
+      }
+      setError("Failed to retrieve user ID");
+      return false;
+    } catch (error) {
+      console.error("Error occurred while setting user ID:", error.message);
+      setError("Failed to set user ID");
+      return false;
     }
-
-    if (userId) {
-      sessionStorage.setItem("userId", userId);
-      return true;
-    }
-    setError("Failed to retrieve user ID");
-    return false;
-  } catch (error) {
-    console.error("Error occurred while setting user ID:", error.message);
-    setError("Failed to set user ID");
-    return false;
-  }
-};
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -103,9 +103,9 @@ const setUserId = async (email) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-indigo-600">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-Grey bg-opacity-40 backdrop-blur-lg p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center text-Secondary">
           Sign Up
         </h2>
 
@@ -113,10 +113,10 @@ const setUserId = async (email) => {
 
         <form onSubmit={handleSignup}>
           <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
+            <label className="block text-Secondary">Email</label>
             <input
               type="email"
-              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-Quaternary focus:border-Quaternary"
               value={tmpEmail}
               onChange={(e) => setTmpEmail(e.target.value)}
               required
@@ -124,21 +124,21 @@ const setUserId = async (email) => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700">Password</label>
+            <label className="block text-Secondary">Password</label>
             <input
               type="password"
-              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-Quaternary focus:border-Quaternary"
               value={tmpPassword}
               onChange={(e) => setTmpPassword(e.target.value)}
               required
             />
           </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700">Confirm Password</label>
+          <div className="mb-6">
+            <label className="block text-Secondary">Confirm Password</label>
             <input
               type="password"
-              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-Quaternary focus:border-Quaternary"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -147,7 +147,7 @@ const setUserId = async (email) => {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-500 transition"
+            className="w-full bg-Grey shadow-lg bg-opacity-40 backdrop-blur-lg text-Secondary font-semibold py-2 rounded hover:bg-Quaternary transition"
           >
             Sign Up
           </button>
