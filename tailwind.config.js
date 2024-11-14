@@ -5,6 +5,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily:{
+        geist: ['"Geist Mono"', 'monospace']
+      },
       colors:{
         Primary:"black",
         Secondary:"#EEEEEE",

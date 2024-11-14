@@ -14,7 +14,6 @@ const Home = () => {
     "/fitness_image.jpeg",
     "/diet_image.jpeg",
     "/sleep_image.jpg",
-    // Add as many images as you want
   ];
 
   useEffect(() => {
@@ -23,25 +22,23 @@ const Home = () => {
     }
   }, [isLoggedIn, navigate]);
 
-  // Set interval to change images every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prevImage) => (prevImage + 1) % images.length);
-    }, 5000); // 5000ms = 5 seconds
-
-    return () => clearInterval(interval); // Clean up the interval on unmount
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="min-h-screen relative overflow-hidden">
       {/* Hero Section with Background Gradient */}
-      <header className="bg-gradient-to-r from-Tertiary to-Primary text-Secondary py-20 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left">
-          <h1 className="text-4xl md:text-5xl font-bold">GET FIT,</h1>
-          <h1 className="text-4xl md:text-5xl font-bold">GET STRONG,</h1>
-          <h1 className="text-4xl md:text-5xl font-bold">GET HEALTHY!</h1>
+      <header className="relative z-10 bg-gradient-to-r from-Tertiary to-Primary text-Secondary py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left font-geist">
+          <h1 className="text-4xl md:text-5xl font-bold">Get Fit,</h1>
+          <h1 className="text-4xl md:text-5xl font-bold">Get Strong,</h1>
+          <h1 className="text-4xl md:text-5xl font-bold">Get Healthy!</h1>
 
-          <p className="mt-4 text-lg md:text-xl">
+          <p className="mt-4 text-lg md:text-x1">
             Track your fitness, diet, and mental well-being in one place.
           </p>
 
@@ -65,7 +62,7 @@ const Home = () => {
         <div className="absolute top-0 right-0 h-full w-1/2">
           <div className="relative h-full w-full">
             <img
-              src={images[currentImage]} // Dynamically use the current image
+              src={images[currentImage]}
               alt="Fitness"
               className="h-full w-full object-cover rounded-lg shadow-lg"
             />
@@ -74,7 +71,7 @@ const Home = () => {
       </header>
 
       {/* Features Section */}
-      <section className="py-16 bg-black">
+      <section className="py-16 bg-black relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-Secondary text-center mb-8">
             What We Offer
