@@ -14,7 +14,6 @@ import {
   ArcElement,
 } from "chart.js";
 
-// Register necessary components for Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,7 +28,6 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
-  // Dummy data
   const fitnessData = {
     totalWorkouts: 20,
     totalCaloriesBurned: 1500,
@@ -40,9 +38,9 @@ const Dashboard = () => {
     ],
     workoutHistory: [
       300, 400, 500, 600, 700, 800, 750, 600, 500, 400, 300, 600,
-    ], // Calories burned over months
-    workoutTypes: ["Running", "Cycling", "Yoga"], // For Pie chart
-    workoutCalories: [300, 400, 200], // Calories burned for each workout type
+    ],
+    workoutTypes: ["Running", "Cycling", "Yoga"],
+    workoutCalories: [300, 400, 200],
   };
 
   const dietData = {
@@ -53,16 +51,16 @@ const Dashboard = () => {
       { meal: "Dinner", calories: 700 },
       { meal: "Snacks", calories: 200 },
     ],
-    dailyCalories: [2000, 2200, 2300, 2100, 2400, 2500, 2200, 2100], // Daily calorie consumption for the last 8 days
+    dailyCalories: [2000, 2200, 2300, 2100, 2400, 2500, 2200, 2100],
     mealLabels: ["Breakfast", "Lunch", "Dinner", "Snacks"],
-    mealCalories: [500, 800, 700, 200], // Calories for each meal type
+    mealCalories: [500, 800, 700, 200],
   };
 
   const wellbeingData = {
     hoursOfSleep: 7.5,
-    waterIntake: 2.5, // Liters
+    waterIntake: 2.5,
     mood: "Good",
-    weeklySleep: [7, 7.5, 8, 6.5, 7, 7.5, 8], // Hours of sleep for the last 7 days
+    weeklySleep: [7, 7.5, 8, 6.5, 7, 7.5, 8],
     sleepMood: [
       "Good",
       "Good",
@@ -71,11 +69,25 @@ const Dashboard = () => {
       "Good",
       "Good",
       "Excellent",
-    ], // Mood for pie chart
-    sleepMoodCounts: [2, 1, 4], // Count of mood types (Good, Fair, Excellent)
+    ],
+    sleepMoodCounts: [2, 1, 4],
   };
 
-  // Fitness Chart: Line Chart for Calories Burned Over Time
+  const maintenanceCalories = 1800;
+
+  const weeklyAverageCaloriesConsumed = (
+    dietData.dailyCalories.reduce((a, b) => a + b, 0) /
+    dietData.dailyCalories.length
+  ).toFixed(1);
+  const weeklyAverageCaloriesBurned = (
+    fitnessData.workoutHistory.reduce((a, b) => a + b, 0) /
+    fitnessData.workoutHistory.length
+  ).toFixed(1);
+  const weeklyAverageSleep = (
+    wellbeingData.weeklySleep.reduce((a, b) => a + b, 0) /
+    wellbeingData.weeklySleep.length
+  ).toFixed(1);
+
   const fitnessChartData = {
     labels: [
       "Jan",
@@ -103,7 +115,6 @@ const Dashboard = () => {
     ],
   };
 
-  // Diet Chart: Bar Chart for Daily Calorie Consumption
   const dietChartData = {
     labels: [
       "Day 1",
@@ -126,7 +137,6 @@ const Dashboard = () => {
     ],
   };
 
-  // Wellbeing Chart: Line Chart for Sleep Hours Over a Week
   const wellbeingChartData = {
     labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     datasets: [
@@ -141,7 +151,6 @@ const Dashboard = () => {
     ],
   };
 
-  // Fitness Pie Chart: Workout Type Distribution
   const fitnessPieChartData = {
     labels: fitnessData.workoutTypes,
     datasets: [
@@ -153,7 +162,6 @@ const Dashboard = () => {
     ],
   };
 
-  // Diet Pie Chart: Meal Calories Distribution
   const dietPieChartData = {
     labels: dietData.mealLabels,
     datasets: [
@@ -165,7 +173,6 @@ const Dashboard = () => {
     ],
   };
 
-  // Wellbeing Pie Chart: Mood Distribution
   const wellbeingPieChartData = {
     labels: ["Good", "Fair", "Excellent"],
     datasets: [
@@ -178,14 +185,14 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen font-poppins  p-8">
+    <div className="min-h-screen font-poppins p-8">
       <h1 className="text-3xl font-bold text-center text-Quaternary mb-8">
         Dashboard
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Fitness Section */}
-        <div className="bg-Grey  bg-opacity-40 backdrop-blur-lg  p-6 rounded-lg shadow-md">
+        <div className="bg-Grey bg-opacity-40 backdrop-blur-lg p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold text-Quaternary mb-4">
             Fitness Overview
           </h2>
@@ -210,9 +217,7 @@ const Dashboard = () => {
               </li>
             ))}
           </ul>
-          {/* Fitness Line Graph */}
           <Line data={fitnessChartData} options={{ responsive: true }} />
-          {/* Fitness Pie Chart */}
           <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
             Workout Type Distribution
           </h3>
@@ -220,7 +225,7 @@ const Dashboard = () => {
         </div>
 
         {/* Diet Section */}
-        <div className="bg-Grey  bg-opacity-40 backdrop-blur-lg  p-6 rounded-lg shadow-md">
+        <div className="bg-Grey bg-opacity-40 backdrop-blur-lg p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold text-Quaternary mb-4">
             Diet Overview
           </h2>
@@ -237,9 +242,7 @@ const Dashboard = () => {
               </li>
             ))}
           </ul>
-          {/* Diet Bar Graph */}
           <Bar data={dietChartData} options={{ responsive: true }} />
-          {/* Diet Pie Chart */}
           <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
             Meal Calorie Distribution
           </h3>
@@ -247,27 +250,44 @@ const Dashboard = () => {
         </div>
 
         {/* Wellbeing Section */}
-        <div className="bg-Grey bg-opacity-40 backdrop-blur-lg  p-6 rounded-lg shadow-md">
+        <div className="bg-Grey bg-opacity-40 backdrop-blur-lg p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold text-Quaternary mb-4">
             Wellbeing Overview
           </h2>
           <p className="font-semibold text-Secondary text-lg mb-4">
-            Hours of Sleep: {wellbeingData.hoursOfSleep} hours
+            Average Hours of Sleep: {wellbeingData.hoursOfSleep} hrs
           </p>
           <p className="font-semibold text-Secondary text-lg mb-4">
-            Water Intake: {wellbeingData.waterIntake} liters
+            Mood: {wellbeingData.mood}
           </p>
-          <h3 className="text-xl font-semibold text-Quaternary mb-2">
-            Weekly Sleep
-          </h3>
-          {/* Wellbeing Line Graph */}
           <Line data={wellbeingChartData} options={{ responsive: true }} />
-          {/* Wellbeing Pie Chart */}
           <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
-            Sleep Mood Distribution
+            Mood Distribution
           </h3>
           <Pie data={wellbeingPieChartData} options={{ responsive: true }} />
         </div>
+      </div>
+
+      {/* Weekly Summary */}
+      <div className="bg-Grey bg-opacity-40 backdrop-blur-lg text-Secondary mt-8 p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4">Weekly Summary</h2>
+        <p className="font-medium">
+          Average Daily Calories Consumed: {weeklyAverageCaloriesConsumed} kcal
+          (
+          <span className="text-Quaternary">
+            {weeklyAverageCaloriesConsumed > maintenanceCalories
+              ? "Above"
+              : "Below"}{" "}
+            Maintenance
+          </span>
+          )
+        </p>
+        <p className="font-medium">
+          Average Daily Calories Burned: {weeklyAverageCaloriesBurned} kcal
+        </p>
+        <p className="font-medium">
+          Average Daily Sleep: {weeklyAverageSleep} hrs
+        </p>
       </div>
     </div>
   );
