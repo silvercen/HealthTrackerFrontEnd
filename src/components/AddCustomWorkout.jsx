@@ -2,50 +2,112 @@ import React, { useState } from "react";
 
 const AddCustomWorkout = ({ onAddCustomWorkout }) => {
   const [workoutName, setWorkoutName] = useState("");
-  const [calories, setCalories] = useState("");
+  const [reps, setReps] = useState("");
+  const [duration, setDuration] = useState("");
+  const [sets, setSets] = useState("");
+  const [caloriesBurned, setCaloriesBurned] = useState("");
 
-  const handleAddCustomWorkout = () => {
-    if (!workoutName || !calories) return;
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-    const newWorkout = {
+    // Validate fields (basic validation)
+    if (
+      !workoutName ||
+      !reps ||
+      !duration ||
+      !sets ||
+      !caloriesBurned ||
+      isNaN(reps) ||
+      isNaN(duration) ||
+      isNaN(sets) ||
+      isNaN(caloriesBurned)
+    ) {
+      alert("Please fill out all fields correctly.");
+      return;
+    }
+
+    // Create the custom workout object
+    const customWorkout = {
       name: workoutName,
-      calories: parseInt(calories),
+      reps: parseInt(reps),
+      duration: parseInt(duration),
+      sets: parseInt(sets),
+      calories: parseInt(caloriesBurned),
     };
 
-    onAddCustomWorkout(newWorkout);
+    // Add the custom workout to the list
+    onAddCustomWorkout(customWorkout);
 
-    // Reset form fields
+    // Clear the form fields
     setWorkoutName("");
-    setCalories("");
+    setReps("");
+    setDuration("");
+    setSets("");
+    setCaloriesBurned("");
   };
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 mb-8">
-      <h3 className="text-xl font-semibold mb-4 text-gray-700">
+    <div className="bg-Grey border border-Quaternary bg-opacity-40 backdrop-blur-lg shadow-xl rounded-lg p-6 mb-8">
+      <h3 className="text-xl font-semibold mb-4 text-white">
         Add Custom Workout
       </h3>
-      <div className="flex flex-col space-y-4">
-        <input
-          type="text"
-          placeholder="Workout Name"
-          value={workoutName}
-          onChange={(e) => setWorkoutName(e.target.value)}
-          className="border border-gray-300 rounded-md p-2 w-full focus:ring-indigo-500 focus:border-indigo-500"
-        />
-        <input
-          type="number"
-          placeholder="Calories Burned"
-          value={calories}
-          onChange={(e) => setCalories(e.target.value)}
-          className="border border-gray-300 rounded-md p-2 w-full focus:ring-indigo-500 focus:border-indigo-500"
-        />
-        <button
-          onClick={handleAddCustomWorkout}
-          className="bg-indigo-600 text-white font-semibold px-4 py-2 rounded-md hover:bg-indigo-500 transition"
-        >
-          Add Custom Workout
-        </button>
-      </div>
+      <form onSubmit={handleSubmit}>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-4">
+            <input
+              type="text"
+              placeholder="Workout Name"
+              value={workoutName}
+              onChange={(e) => setWorkoutName(e.target.value)}
+              className="border border-gray-300 rounded-md p-2 w-full focus:ring-indigo-500 focus:border-indigo-500 text-white bg-transparent"
+            />
+          </div>
+
+          <div className="flex space-x-4">
+            <input
+              type="number"
+              placeholder="Reps"
+              value={reps}
+              onChange={(e) => setReps(e.target.value)}
+              className="border border-gray-300 rounded-md p-2 w-full focus:ring-indigo-500 focus:border-indigo-500 text-white bg-transparent"
+            />
+            <input
+              type="number"
+              placeholder="Sets"
+              value={sets}
+              onChange={(e) => setSets(e.target.value)}
+              className="border border-gray-300 rounded-md p-2 w-full focus:ring-indigo-500 focus:border-indigo-500 text-white bg-transparent"
+            />
+          </div>
+
+          <div className="flex space-x-4">
+            <input
+              type="number"
+              placeholder="Duration (minutes)"
+              value={duration}
+              onChange={(e) => setDuration(e.target.value)}
+              className="border border-gray-300 rounded-md p-2 w-full focus:ring-indigo-500 focus:border-indigo-500 text-white bg-transparent"
+            />
+            <input
+              type="number"
+              placeholder="Calories Burned"
+              value={caloriesBurned}
+              onChange={(e) => setCaloriesBurned(e.target.value)}
+              className="border border-gray-300 rounded-md p-2 w-full focus:ring-indigo-500 focus:border-indigo-500 text-white bg-transparent"
+            />
+          </div>
+
+          <div className="mt-4 flex justify-end">
+            <button
+              type="submit"
+              className="bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-Quaternary transition"
+            >
+              Add Workout
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   );
 };
