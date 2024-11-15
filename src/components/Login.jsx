@@ -1,14 +1,75 @@
 import React, { useState } from "react";
+import { useAuth } from "./AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [tmpEmail, setTmpEmail] = useState("");
+  const [tmpPassword, setTmpPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate()
+  const {login} = useAuth();
+  const auth = {
+    email: tmpEmail,
+    password: tmpPassword
+  };
 
-  const handleLogin = (e) => {
+  async function logIn()
+  {
+    let Token = "";
+    try
+    {
+      await fetch("http://localhost:9088/auth/validate/user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json"},
+        body: JSON.stringify(auth)
+      })
+      .then((response) => response.text())
+      .then((token) => {
+        Token = token;
+        sessionStorage.setItem("token", token)
+        login()
+      })
+      return true
+    }
+    catch (error)
+    {
+      console.error("Error occurred while logging in:", error.message);
+      setError("Failed to login user");
+    }
+    return false
+  }
+
+  async function setUserId()
+  {
+    try
+    {
+      await fetch("http://localhost:9088/auth/"+auth.email, {
+        method: "GET",
+        headers: { "Content-Type": "application/json"}
+      })
+     .then((response) => response.text())
+     .then((userId) => {
+       sessionStorage.setItem("userId", userId)
+     })
+     return true
+    }
+    catch (error)
+    {
+      console.error("Error occurred while setting user ID:", error.message);
+      setError("Failed to set user ID");
+    }
+    return false
+  }
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-
-    // Handle login logic here
-    console.log("Login successful:", { email, password });
+    if(await logIn() === true)
+    {
+      if(await setUserId() === true)
+      {
+        navigate('/dashboard')
+      }
+    }
   };
 
   return (
@@ -24,8 +85,8 @@ const Login = () => {
             <input
               type="email"
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-indigo-500 focus:border-indigo-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={tmpEmail}
+              onChange={(e) => setTmpEmail(e.target.value)}
               required
             />
           </div>
@@ -35,8 +96,8 @@ const Login = () => {
             <input
               type="password"
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-indigo-500 focus:border-indigo-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={tmpPassword}
+              onChange={(e) => setTmpPassword(e.target.value)}
               required
             />
           </div>
