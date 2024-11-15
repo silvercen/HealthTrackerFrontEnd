@@ -103,6 +103,9 @@ const Login = () => {
               required
             />
           </div>
+          <div>
+            <p className="font-poppins pb-5 text-Quaternary hover:underline cursor-pointer" onClick={()=>navigate("/signup")}>new user?create an account here.</p>
+          </div>
 
           <button
             type="submit"
