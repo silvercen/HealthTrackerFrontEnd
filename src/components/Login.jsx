@@ -7,7 +7,7 @@ const Login = () => {
   const [tmpPassword, setTmpPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate()
-  const {login} = useAuth();
+  const {login, isLoggedIn} = useAuth();
   const auth = {
     email: tmpEmail,
     password: tmpPassword
@@ -27,7 +27,6 @@ const Login = () => {
       .then((token) => {
         Token = token;
         sessionStorage.setItem("token", token)
-        login()
       })
       return true
     }
@@ -67,6 +66,8 @@ const Login = () => {
     {
       if(await setUserId() === true)
       {
+        login()
+        console.log(isLoggedIn)
         navigate('/dashboard')
       }
     }
@@ -87,7 +88,7 @@ const Login = () => {
 
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-Quaternary focus:border-Quaternary"
               value={tmpEmail}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setTmpEmail(e.target.value)}
               required
             />
           </div>
@@ -98,7 +99,7 @@ const Login = () => {
               type="password"
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-Quaternary focus:border-Quaternary"
               value={tmpPassword}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setTmpPassword(e.target.value)}
               required
             />
           </div>

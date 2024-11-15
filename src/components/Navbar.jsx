@@ -9,28 +9,22 @@ const Navbar = () => {
   const [content, setContent] = useState();
   const { isLoggedIn } = useAuth();
 
-  async function letterCheck() {
-    const response = await fetch(
-      "http://localhost:9088/user/" + sessionStorage.getItem(`email`),
-      {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    const user = await response.json();
-    return user.userName.charAt(0).toUpperCase();
-  }
+  // async function letterCheck() {
+  //   const response = await fetch(
+  //     "http://localhost:9088/user/" + sessionStorage.getItem(`userId`)+"/get-details",
+  //     {
+  //       method: "GET",
+  //       headers: { "Content-Type": "application/json",
+  //         Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+  //        },
+  //     }
+  //   );
+  //   const user = await response.json();
+  //   return user.userName.charAt(0).toUpperCase();
+  // }
 
   useEffect(() => {
     if (isLoggedIn === true) {
-      letterCheck().then((letter) => {
-        setContent(
-          <div className="h-8 w-8 rounded-full border-2 border-white hover:border-Quaternary cursor-pointer bg-Secondary flex items-center justify-center text-white font-semibold">
-            {letter}
-          </div>
-        );
-      });
-    } else {
       setContent(
         // <img
         //   className="h-8 w-8 rounded-full border-2 border-white hover:border-Quaternary cursor-pointer"
@@ -51,6 +45,15 @@ const Navbar = () => {
             clipRule="evenodd"
           />
         </svg>
+        
+      );
+    } else {
+      setContent(
+        <div className="h-8 w-8 rounded-full border-2 border-white hover:border-Quaternary cursor-pointer bg-Secondary flex items-center justify-center text-white font-semibold">
+          <button className="bg-transparent border-2 border-white text-white font-semibold px-6 py-2 rounded-full hover:bg-Quaternary hover:text-Primary transition">
+            Login
+          </button>
+        </div>
       );
     }
   }, [isLoggedIn]);

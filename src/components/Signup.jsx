@@ -80,6 +80,7 @@ const Signup = () => {
         if(await setUserId() === true)
         {
           console.log("Signup successful and logged in");
+          login()
           navigate(`/dashboard`)
         }
         else
