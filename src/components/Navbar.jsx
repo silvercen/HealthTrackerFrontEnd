@@ -93,7 +93,7 @@ const Navbar = () => {
 
           {/* Centered Navigation Links with White Rounded Border */}
           <div className="flex items-center justify-center flex-grow " style={{marginLeft:'3em'}}>
-            <div className="flex space-x-1 bg-opacity-10 font-poppins border border-Secondary rounded-full px-2 py-1">
+            <div className="flex space-x-1 bg-opacity-10 font-poppins cursor-pointer border border-Secondary rounded-full px-2 py-1">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
