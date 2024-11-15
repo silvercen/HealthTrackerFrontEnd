@@ -91,24 +91,23 @@ const Diet = () => {
   }, [foodList]);
 
   const addEachFood = async() => {
-    await fetch('http://localhost:9088/diet/'+sessionStorage.getItem('userId')+'/add-food/'+selectedFood, 
+    await fetch('http://localhost:9093/diet/123'+'/add-food/'+selectedFood, 
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+sessionStorage.getItem('token')
+        // 'Authorization': 'Bearer '+sessionStorage.getItem('token')
       }
     });
   }
 
   const saveFoodLog = async () => {
     // Save logic goes here, e.g., sending foodList data to a backend or saving locally
-    const response = await fetch('https://localhost:9088/diet/'+sessionStorage.getItem('userId')+'/save-diet',
+    const response = await fetch('http://localhost:9093/diet/123'+'/save-diet',
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+sessionStorage.getItem('token')
+        // 'Authorization': 'Bearer '+sessionStorage.getItem('token')
       },
-      body: JSON.stringify(foodList)
     })
     if(await response.json() === null)
     {
