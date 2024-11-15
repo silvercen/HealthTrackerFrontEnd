@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import AddCustomFood from "./AddCustomFood";
+import { Navigate, useNavigate } from "react-router-dom";
+import { parse } from "postcss";
 
 // Fetch food data from API
+
 const fetchFoodData = async () => {
   try {
     const response = await fetch(
@@ -16,17 +19,20 @@ const fetchFoodData = async () => {
     }));
   } catch (error) {
     console.error("Error fetching food data:", error);
-    return []; // Return an empty array in case of error
+    Navigate('/bad-request', {state: {errorType: 'bad-request'}});
+    return []; 
   }
 };
 
 const Diet = () => {
+  const navigate = useNavigate();
   const [foodOptions, setFoodOptions] = useState([]);
   const [selectedFood, setSelectedFood] = useState("");
   const [grams, setGrams] = useState("");
   const [foodList, setFoodList] = useState([]);
   const [totalCalories, setTotalCalories] = useState(0);
   const [totalProtein, setTotalProtein] = useState(0);
+  const [totalSugar, setTotalSugar] = useState(0);
   const [totalFat, setTotalFat] = useState(0);
 
   // Fetch food options when the component mounts
@@ -39,13 +45,14 @@ const Diet = () => {
   }, []);
 
   // Handle adding a food item to the list with portion size in grams
-  const addFood = () => {
+  const addFood = async () => {
     if (!selectedFood || !grams) return;
 
     const food = foodOptions.find((f) => f.name === selectedFood);
     const calories = (parseFloat(grams) * food.caloriesPer100g) / 100;
     const protein = (parseFloat(grams) * food.proteinPer100g) / 100;
     const fat = (parseFloat(grams) * food.fatPer100g) / 100;
+    const sugar = (parseFloat(grams) * food.sugarPer100g)/100;
 
     const foodWithDetails = {
       name: food.name,
@@ -53,9 +60,11 @@ const Diet = () => {
       calories: Math.round(calories),
       protein: Math.round(protein * 10) / 10,
       fat: Math.round(fat * 10) / 10,
+      sugar: Math.round(sugar * 10) / 10,
     };
 
     setFoodList([...foodList, foodWithDetails]);
+    await addEachFood()
     setSelectedFood("");
     setGrams("");
   };
@@ -73,14 +82,42 @@ const Diet = () => {
     );
     const totalProtein = foodList.reduce((sum, food) => sum + food.protein, 0);
     const totalFat = foodList.reduce((sum, food) => sum + food.fat, 0);
+    const totalSugar = foodList.reduce((sum, food) => sum + food.sugar, 0);
 
     setTotalCalories(totalCalories);
     setTotalProtein(totalProtein);
     setTotalFat(totalFat);
+    setTotalSugar(totalSugar);
   }, [foodList]);
 
-  const saveFoodLog = () => {
+  const addEachFood = async() => {
+    await fetch('http://localhost:9088/diet/'+sessionStorage.getItem('userId')+'/add-food/'+selectedFood, 
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+sessionStorage.getItem('token')
+      }
+    });
+  }
+
+  const saveFoodLog = async () => {
     // Save logic goes here, e.g., sending foodList data to a backend or saving locally
+    const response = await fetch('https://localhost:9088/diet/'+sessionStorage.getItem('userId')+'/save-diet',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+sessionStorage.getItem('token')
+      },
+      body: JSON.stringify(foodList)
+    })
+    if(await response.json() === null)
+    {
+      navigate('/bad-request')
+    }
+    else
+    {
+      navigate('/')
+    }
     alert("Food log saved!");
   };
 
