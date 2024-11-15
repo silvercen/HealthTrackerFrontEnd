@@ -1,26 +1,42 @@
 import React, { useState, useEffect } from "react";
 import AddCustomFood from "./AddCustomFood";
 
-const foodOptions = [
-  { name: "Apple", caloriesPer100g: 52, proteinPer100g: 0.3, fatPer100g: 0.2 },
-  { name: "Banana", caloriesPer100g: 89, proteinPer100g: 1.1, fatPer100g: 0.3 },
-  { name: "Salad", caloriesPer100g: 15, proteinPer100g: 1.2, fatPer100g: 0.2 },
-  {
-    name: "Chicken Breast",
-    caloriesPer100g: 165,
-    proteinPer100g: 31,
-    fatPer100g: 3.6,
-  },
-  { name: "Rice", caloriesPer100g: 130, proteinPer100g: 2.4, fatPer100g: 0.3 },
-];
+// Fetch food data from API
+const fetchFoodData = async () => {
+  try {
+    const response = await fetch(
+      "https://sharunraj.github.io/foodApi.github.io/FoodAPI.json"
+    );
+    const data = await response.json();
+    return data.map((food) => ({
+      name: food.foodName,
+      caloriesPer100g: food.avgCalories,
+      proteinPer100g: food.foodProtein,
+      fatPer100g: food.foodFat,
+    }));
+  } catch (error) {
+    console.error("Error fetching food data:", error);
+    return []; // Return an empty array in case of error
+  }
+};
 
 const Diet = () => {
+  const [foodOptions, setFoodOptions] = useState([]);
   const [selectedFood, setSelectedFood] = useState("");
   const [grams, setGrams] = useState("");
   const [foodList, setFoodList] = useState([]);
   const [totalCalories, setTotalCalories] = useState(0);
   const [totalProtein, setTotalProtein] = useState(0);
   const [totalFat, setTotalFat] = useState(0);
+
+  // Fetch food options when the component mounts
+  useEffect(() => {
+    const loadFoodData = async () => {
+      const foods = await fetchFoodData();
+      setFoodOptions(foods);
+    };
+    loadFoodData();
+  }, []);
 
   // Handle adding a food item to the list with portion size in grams
   const addFood = () => {
