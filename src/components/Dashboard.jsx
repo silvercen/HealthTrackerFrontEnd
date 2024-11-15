@@ -188,7 +188,7 @@ const Dashboard = () => {
   };
   // Mock user data
   const userInfo = {
-    username: "JohnDoe",
+    username: "John Doe",
     age: 30,
     weight: 70, // in kg
     height: 175, // in cm
@@ -230,32 +230,29 @@ const Dashboard = () => {
       <div className="bg-Grey bg-opacity-40 backdrop-blur-lg text-Secondary p-6 rounded-lg shadow-md mb-8 flex flex-col md:flex-row items-center">
         {/* User Details */}
         <div className="flex-1">
-          <h2 className="text-4xl text-Quaternary font-semibold mb-4">
-            User Information:
+          <h2 className="text-5xl text-Quaternary font-medium mb-4">
+            {userInfo.username}
           </h2>
-          <p>
-            <strong className="text-2xl font-medium pr-2">Username:</strong>{" "}
-            <span className="text-2xl">{userInfo.username}</span>
-          </p>
-          <p>
+
+          <p className="mb-2">
             <strong className="text-2xl font-medium pr-2">Age:</strong>{" "}
             <span className="text-2xl">{userInfo.age} years</span>
           </p>
-          <p>
+          <p className="mb-2">
             <strong className="text-2xl font-medium pr-2">Weight:</strong>
             <span className="text-2xl"> {userInfo.weight} </span>
             kg
           </p>
-          <p>
+          <p className="mb-2">
             <strong className="text-2xl font-medium pr-2">Height:</strong>{" "}
             <span className="text-2xl">{userInfo.height} </span>
             cm
           </p>
-          <p>
+          <p className="mb-2">
             <strong className="text-2xl font-medium pr-2">Gender:</strong>{" "}
             <span className="text-2xl">{userInfo.gender}</span>
           </p>
-          <p>
+          <p className="mb-2">
             <strong className="text-2xl font-medium pr-2">Journey:</strong>{" "}
             <span className="text-2xl">{userInfo.journey}</span>
           </p>
@@ -281,7 +278,6 @@ const Dashboard = () => {
               clipRule="evenodd"
             />
           </svg>
-        
         </div>
       </div>
 

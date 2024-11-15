@@ -86,7 +86,7 @@ const Home = () => {
       </header>
 
       {/* Features Section */}
-      <section className="py-16 relative z-10">
+      <section className="py-16 relative z-10 font-poppins">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-Secondary text-center mb-8">
             What We Offer
@@ -153,6 +153,45 @@ const Home = () => {
                   reminders to ensure holistic wellness.
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* Importance Section */}
+      <section className="py-16 relative z-10 font-poppins  ">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center bg-Grey bg-opacity-40 backdrop-blur-lg rounded-lg shadow-xl overflow-hidden">
+            {/* Left Side - Text */}
+            <div className="w-full md:w-1/2 p-8">
+              <h2 className="text-3xl font-bold text-Quaternary mb-4">
+                Why Choose Us?
+              </h2>
+              <p className="text-lg text-Secondary mb-6">
+                Our app is your one-stop solution for achieving and maintaining
+                a healthier lifestyle. Whether you're tracking your fitness,
+                managing your diet, or focusing on mental well-being, we provide
+                tools and insights to empower your journey.
+              </p>
+              <p className="text-lg text-Secondary">
+                With personalized recommendations, holistic tracking, and
+                seamless integration, you can stay motivated and on track to
+                achieve your health goals.
+              </p>
+              <button
+                className="mt-6 border border-Quaternary text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-Quaternary transition"
+                onClick={() => navigate(`/signup`)}
+              >
+                Start Your Journey Today
+              </button>
+            </div>
+
+            {/* Right Side - Image */}
+            <div className="w-full md:w-1/2">
+              <img
+                src="/importance_image.jpg"
+                alt="Importance of Our App"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>

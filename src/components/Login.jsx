@@ -6,69 +6,59 @@ const Login = () => {
   const [tmpEmail, setTmpEmail] = useState("");
   const [tmpPassword, setTmpPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate()
-  const {login, isLoggedIn} = useAuth();
+  const navigate = useNavigate();
+  const { login, isLoggedIn } = useAuth();
   const auth = {
     email: tmpEmail,
-    password: tmpPassword
+    password: tmpPassword,
   };
 
-  async function logIn()
-  {
+  async function logIn() {
     let Token = "";
-    try
-    {
+    try {
       await fetch("http://localhost:9088/auth/validate/user", {
         method: "POST",
-        headers: { "Content-Type": "application/json"},
-        body: JSON.stringify(auth)
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(auth),
       })
-      .then((response) => response.text())
-      .then((token) => {
-        Token = token;
-        sessionStorage.setItem("token", token)
-      })
-      return true
-    }
-    catch (error)
-    {
+        .then((response) => response.text())
+        .then((token) => {
+          Token = token;
+          sessionStorage.setItem("token", token);
+        });
+      return true;
+    } catch (error) {
       console.error("Error occurred while logging in:", error.message);
       setError("Failed to login user");
     }
-    return false
+    return false;
   }
 
-  async function setUserId()
-  {
-    try
-    {
-      await fetch("http://localhost:9088/auth/"+auth.email, {
+  async function setUserId() {
+    try {
+      await fetch("http://localhost:9088/auth/" + auth.email, {
         method: "GET",
-        headers: { "Content-Type": "application/json"}
+        headers: { "Content-Type": "application/json" },
       })
-     .then((response) => response.text())
-     .then((userId) => {
-       sessionStorage.setItem("userId", userId)
-     })
-     return true
-    }
-    catch (error)
-    {
+        .then((response) => response.text())
+        .then((userId) => {
+          sessionStorage.setItem("userId", userId);
+        });
+      return true;
+    } catch (error) {
       console.error("Error occurred while setting user ID:", error.message);
       setError("Failed to set user ID");
     }
-    return false
+    return false;
   }
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if(await logIn() === true)
-    {
-      if(await setUserId() === true)
-      {
-        login()
-        console.log(isLoggedIn)
-        navigate('/dashboard')
+    if ((await logIn()) === true) {
+      if ((await setUserId()) === true) {
+        login();
+        console.log(isLoggedIn);
+        navigate("/dashboard");
       }
     }
   };
@@ -85,7 +75,6 @@ const Login = () => {
             <label className="block text-Secondary">Email</label>
             <input
               type="email"
-
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-Quaternary focus:border-Quaternary"
               value={tmpEmail}
               onChange={(e) => setTmpEmail(e.target.value)}
@@ -104,7 +93,12 @@ const Login = () => {
             />
           </div>
           <div>
-            <p className="font-poppins pb-5 text-Quaternary hover:underline cursor-pointer" onClick={()=>navigate("/signup")}>new user?create an account here.</p>
+            <p
+              className="font-poppins pb-5 text-Quaternary hover:underline cursor-pointer"
+              onClick={() => navigate("/signup")}
+            >
+              new user? create an account here.
+            </p>
           </div>
 
           <button

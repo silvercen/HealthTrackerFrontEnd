@@ -8,6 +8,7 @@ import WellBeing from "./components/WellBeing";
 import AccountPage from "./components/AccountPage";
 import Dashboard from "./components/Dashboard";
 import ErrorPage from "./components/Error";
+import ScrollToTop from "./components/ScrollTop";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./components/AuthContext";
 function App() {
@@ -30,6 +31,7 @@ function App() {
           ></div>
 
           <Router>
+            <ScrollToTop/>
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
