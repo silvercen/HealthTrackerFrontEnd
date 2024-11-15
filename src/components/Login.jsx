@@ -86,7 +86,7 @@ const Login = () => {
               type="email"
 
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-Quaternary focus:border-Quaternary"
-              value={email}
+              value={tmpEmail}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
@@ -97,7 +97,7 @@ const Login = () => {
             <input
               type="password"
               className="w-full p-2 border border-gray-300 rounded mt-1 focus:ring-Quaternary focus:border-Quaternary"
-              value={password}
+              value={tmpPassword}
               onChange={(e) => setPassword(e.target.value)}
               required
             />

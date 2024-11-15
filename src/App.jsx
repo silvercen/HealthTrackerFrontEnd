@@ -16,18 +16,23 @@ function App() {
         <div className="relative min-h-screen overflow-hidden bg-black">
           <div
             className="absolute inset-0 w-[450px] h-[450px] bg-gradient-to-b from-blue-700 to-teal-700 rounded-full"
-            style={{ filter: "blur(200px)" }}
+            style={{ filter: "blur(200px)", zIndex: 0 }}
           ></div>
           <div
             className="absolute inset-0 w-[450px] h-[450px] bg-gradient-to-b from-purple-500 to-pink-400 rounded-full"
-            style={{ filter: "blur(200px)", left: "50rem", top: "30rem" }}
+            style={{
+              filter: "blur(200px)",
+              left: "50rem",
+              top: "30rem",
+              zIndex: 0,
+            }}
           ></div>
 
           <Router>
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/account" element={<AccountPage/>}/>
+              <Route path="/account" element={<AccountPage />} />
               <Route path="/fitness" element={<Fitness />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/login" element={<Login />} />
