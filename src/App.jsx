@@ -6,7 +6,8 @@ import Login from "./components/Login";
 import Diet from "./components/Diet";
 import WellBeing from "./components/WellBeing";
 import AccountPage from "./components/AccountPage";
-import Dashboard from "./components/Dashboard"
+import Dashboard from "./components/Dashboard";
+import ErrorPage from "./components/Error";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./components/AuthContext";
 function App() {
@@ -39,6 +40,12 @@ function App() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/diet" element={<Diet />} />
               <Route path="/wellbeing" element={<WellBeing />} />
+              <Route
+                path="/bad-request"
+                element={<ErrorPage />}
+                state={{ errorType: "bad-request" }}
+              />
+              <Route path="/*" element={<ErrorPage />} />
             </Routes>
           </Router>
         </div>
