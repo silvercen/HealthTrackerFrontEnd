@@ -8,15 +8,15 @@ const Signup = () => {
   const [tmpPassword, setTmpPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const { login } = useAuth();
 
-  const authData = {
+  const {login} = useAuth()
+  const auth = {
     email: tmpEmail,
     password: tmpPassword,
     role: {
       roleId: "1",
-      roleName: "USER",
-    },
+      roleName: "USER"
+    }
   };
 
   const register = async (auth) => {
@@ -43,34 +43,23 @@ const Signup = () => {
       setError("Failed to register user");
       return false;
     }
-  };
-
-  const setUserId = async (email) => {
-    try {
-      const response = await fetch(`http://localhost:9088/auth/${email}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      // Check if the response is JSON
-      const contentType = response.headers.get("content-type");
-      let userId;
-
-      if (contentType && contentType.includes("application/json")) {
-        const data = await response.json();
-        userId = data.userId; // assuming API response has a userId field
-      } else {
-        // If not JSON, assume it's plain text
-        userId = await response.text();
-      }
-
-      if (userId) {
-        sessionStorage.setItem("userId", userId);
-        return true;
-      }
-      setError("Failed to retrieve user ID");
-      return false;
-    } catch (error) {
+  }
+  async function setUserId()
+  {
+    try
+    {
+      await fetch("http://localhost:9088/auth/"+auth.email, {
+        method: "GET"
+      })
+     .then((response) => response.text())
+     .then((userId) => {
+       console.log(userId)
+       sessionStorage.setItem("userId", userId)
+     })
+     return true
+    }
+    catch (error)
+    {
       console.error("Error occurred while setting user ID:", error.message);
       setError("Failed to set user ID");
       return false;
@@ -84,18 +73,24 @@ const Signup = () => {
       setError("Passwords do not match");
       return;
     }
-
-    const registrationSuccess = await register(authData);
-
-    if (registrationSuccess) {
-      const userIdSet = await setUserId(tmpEmail);
-      if (userIdSet) {
-        login();
-        console.log("Signup successful and logged in");
-        navigate(`/dashboard`);
-      } else {
-        console.log("User registered but failed to set user ID");
-        navigate(`/login`);
+    if(auth.email !== "" && auth.password !== "")
+    {
+      if(await register(auth) === true)
+      {
+        if(await setUserId() === true)
+        {
+          console.log("Signup successful and logged in");
+          navigate(`/dashboard`)
+        }
+        else
+        {
+          console.log("Signup successful");
+          navigate(`/login`)
+        }
+      }
+      else
+      {
+        console.log("Signup failed");
       }
     } else {
       console.log("Signup failed");
