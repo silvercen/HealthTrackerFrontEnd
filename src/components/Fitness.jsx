@@ -163,7 +163,7 @@ const Fitness = () => {
             )}
             <button
               onClick={addWorkout}
-              className="bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
+              className="bg-Quaternary hover:scale-105  text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
             >
               Add
             </button>
@@ -209,7 +209,7 @@ const Fitness = () => {
 
           <button
             onClick={saveFitnessLog}
-            className="mt-6 w-full bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
+            className="mt-6 w-full hover:scale-105  bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
           >
             Save Fitness Log
           </button>

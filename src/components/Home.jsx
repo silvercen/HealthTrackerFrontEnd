@@ -5,75 +5,154 @@ import IconFoodOutline from "../assets/IconFoodOutline";
 import IconMentalHealthFill from "../assets/IconMentalHealthFill";
 import IconHeartbeat from "../assets/IconHeartBeat";
 import { useAuth } from "./AuthContext";
+import { motion } from "framer-motion";
+import { Typewriter } from "react-simple-typewriter";
+
+// Animation Variants
+const cardVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const Home = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
+  const [showContent, setShowContent] = useState(false);
+   useEffect(() => {
+     // Show content after the typewriter finishes
+     const timer = setTimeout(() => {
+       setShowContent(true);
+     }, 3000); // Adjust timing as needed
+     return () => clearTimeout(timer);
+   }, []);
+
+  // States for image carousel
   const [currentImage, setCurrentImage] = useState(0);
   const [fadeClass, setFadeClass] = useState("opacity-100");
+  const images = ["/gym.jpeg", "/diet.jpeg", "/sleep.jpeg"];
 
-  const images = [
-    "/gym.jpeg",
-    "/diet.jpeg",
-    "/sleep.jpeg",
-  ];
+  // States for typewriter and healthy visibility
+  const [lineIndex, setLineIndex] = useState(0);
+  const [healthyVisible, setHealthyVisible] = useState(false);
 
+  // Navigate to dashboard if logged in
   useEffect(() => {
     if (isLoggedIn) {
       navigate(`/dashboard`);
     }
   }, [isLoggedIn, navigate]);
 
+  // Image carousel effect
   useEffect(() => {
     const interval = setInterval(() => {
-      setFadeClass("opacity-0"); // Fade out current image
+      setFadeClass("opacity-0");
       setTimeout(() => {
         setCurrentImage((prevImage) => (prevImage + 1) % images.length);
-        setFadeClass("opacity-100"); // Fade in the next image
-      }, 500); // Match with the fade-out duration
+        setFadeClass("opacity-100");
+      }, 500);
     }, 5000);
 
     return () => clearInterval(interval);
   }, []);
 
+  // Typewriter line control
+  useEffect(() => {
+    if (lineIndex < 3) {
+      const timeout = setTimeout(() => {
+        setLineIndex(lineIndex + 1);
+      }, 1000); // Adjust line delay as needed
+      return () => clearTimeout(timeout);
+    }
+  }, [lineIndex]);
+
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Hero Section with Background Gradient */}
+      {/* Hero Section */}
       <header className="relative z-10 text-Secondary py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left flex items-center">
-          {/* Left Side - Text Section */}
+          {/* Left Side */}
           <div className="w-1/2">
-            <h1 className="text-4xl md:text-5xl font-bold font-poppins">
-              Get Fit,
-            </h1>
-            <h1 className="text-4xl md:text-5xl font-bold font-poppins">
-              Get Strong,
-            </h1>
-            <h1 className="text-4xl md:text-5xl font-bold font-poppins">
-              Get <span className="text-Quaternary">Healthy!</span>
-            </h1>
+            {lineIndex >= 0 && (
+              <h1 className="text-4xl md:text-5xl font-bold font-poppins">
+                <Typewriter
+                  words={["Get Fit,"]}
+                  loop={1}
+                  cursor={false}
+                  typeSpeed={100}
+                />
+              </h1>
+            )}
+            {lineIndex >= 1 && (
+              <h1 className="text-4xl md:text-5xl font-bold font-poppins">
+                <Typewriter
+                  words={["Get Strong,"]}
+                  loop={1}
+                  cursor={false}
+                  typeSpeed={100}
+                />
+              </h1>
+            )}
+            {lineIndex >= 2 && (
+              <h1 className="text-4xl md:text-5xl font-bold font-poppins">
+                <Typewriter
+                  words={["Get "]}
+                  loop={1}
+                  cursor={false}
+                  typeSpeed={100}
+                  onType={(arrayIndex) => {
+                    if (arrayIndex === 0) {
+                      setTimeout(() => setHealthyVisible(true), 500); // Delay before "Healthy!"
+                    }
+                  }}
+                />
+                {healthyVisible && (
+                  <motion.span
+                    className="text-teal-500"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    Healthy!
+                  </motion.span>
+                )}
+              </h1>
+            )}
 
-            <p className="mt-4 text-lg md:text-x1 font-poppins font-semibold">
-              Track your fitness, diet, and mental well-being in one place.
-            </p>
+            {/* Content to load after Typewriter */}
+            {showContent && (
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              >
+                <p className="mt-4 text-lg md:text-x1 font-poppins font-semibold">
+                  Track your fitness, diet, and mental well-being in one place.
+                </p>
 
-            <div className="mt-8 space-x-4">
-              <button
-                className="bg-white text-Primary font-semibold px-6 py-2 rounded-full shadow-md hover:text-Quaternary hover:bg-gray-200 transition"
-                onClick={() => navigate(`/signup`)}
-              >
-                Sign Up
-              </button>
-              <button
-                className="bg-transparent border-2 border-white text-white font-semibold px-6 py-2 rounded-full hover:bg-Quaternary  transition"
-                onClick={() => navigate(`/login`)}
-              >
-                Login
-              </button>
-            </div>
+                <div className="mt-8 space-x-4">
+                  <button
+                    className="bg-white text-Primary font-semibold px-6 py-2 rounded-full shadow-md hover:text-Quaternary hover:bg-Secondary hover:scale-110 transition"
+                    onClick={() => navigate(`/signup`)}
+                  >
+                    Sign Up
+                  </button>
+                  <button
+                    className="bg-transparent border-2 border-white text-white font-semibold px-6 py-2 rounded-full hover:bg-Quaternary hover:scale-110 transition"
+                    onClick={() => navigate(`/login`)}
+                  >
+                    Login
+                  </button>
+                </div>
+              </motion.div>
+            )}
           </div>
 
-          {/* Right Side - Image Slider Section */}
+          {/* Right Side - Carousel */}
           <div className="w-1/2">
             <div className="relative h-full w-full">
               <img
@@ -89,23 +168,31 @@ const Home = () => {
       {/* Features Section */}
       <section className="pb-16 relative z-10 font-poppins">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-Secondary text-center mb-8">
+            <div className="flex items-center justify-center space-x-2">
+              <IconHeartbeat
+                style={{ width: "40px", height: "40px", color: "#ff0000" }}
+              />
+              <span className="text-Secondary text-4xl font-geist font-semibold">
+                Vitalis
+              </span>
+            </div>
+            <p className="pt-1 font-poppins font-normal text-lg">
+              The Complete Health Tracker
+            </p>
+          </h2>
 
-            <h2 className="text-3xl font-bold text-Secondary text-center mb-8">
-              <div className="flex items-center justify-center space-x-2">
-                <IconHeartbeat
-                  style={{ width: "40px", height: "40px", color: "#ff0000" }}
-                />
-                <span className="text-Secondary text-4xl font-geist font-semibold">
-                  Vitalis
-                </span>
-              </div>
-            <p className=" pt-1 font-poppins font-normal text-lg">The Complete Health Tracker</p>
-            </h2>
-
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Card 1 - Fitness Tracking */}
-            <div className="bg-Grey bg-opacity-40 backdrop-blur-lg rounded-lg shadow-lg overflow-hidden group transition">
+          {/* Feature Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+            {/* Card 1 */}
+            <motion.div
+              className="bg-Grey bg-opacity-40 backdrop-blur-lg rounded-lg shadow-lg overflow-hidden group transition"
+              initial="hidden"
+              whileInView="visible"
+              variants={cardVariants} // Ensure variants are defined
+              viewport={{ once: true, amount: 0.5 }} // Trigger when 50% of the card is visible
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
               <div className="relative h-56">
                 <img
                   className="w-full h-full object-cover group-hover:scale-105 transition-all"
@@ -123,10 +210,17 @@ const Home = () => {
                   with personalized insights.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Card 2 - Diet Management */}
-            <div className="bg-Grey bg-opacity-40 backdrop-blur-lg rounded-lg shadow-lg overflow-hidden group transition">
+            {/* Card 2 */}
+            <motion.div
+              className="bg-Grey bg-opacity-40 backdrop-blur-lg rounded-lg shadow-lg overflow-hidden group transition"
+              initial="hidden"
+              whileInView="visible"
+              variants={cardVariants}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
               <div className="relative h-56">
                 <img
                   className="w-full h-full object-cover group-hover:scale-105 transition-all"
@@ -144,10 +238,17 @@ const Home = () => {
                   recommendations tailored to your goals.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Card 3 - Well-being Insights */}
-            <div className="bg-Grey bg-opacity-40 backdrop-blur-lg rounded-lg shadow-lg overflow-hidden group transition">
+            {/* Card 3 */}
+            <motion.div
+              className="bg-Grey bg-opacity-40 backdrop-blur-lg rounded-lg shadow-lg overflow-hidden group transition"
+              initial="hidden"
+              whileInView="visible"
+              variants={cardVariants}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
               <div className="relative h-56">
                 <img
                   className="w-full h-full object-cover group-hover:scale-105 transition-all"
@@ -165,16 +266,28 @@ const Home = () => {
                   reminders to ensure holistic wellness.
                 </p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
-      {/* Importance Section */}
-      <section className="py-16 relative z-10 font-poppins">
+
+      {/* Why Choose Us Section */}
+      <motion.section
+        className="py-16 relative z-10 font-poppins"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.8 }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center bg-Grey bg-opacity-40 backdrop-blur-lg rounded-lg shadow-xl overflow-hidden">
             {/* Left Side - Text */}
-            <div className="w-full md:w-1/2 p-8">
+            <motion.div
+              className="w-full md:w-1/2 p-8"
+              variants={sectionVariants}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
               <h2 className="text-3xl font-bold text-Quaternary mb-4">
                 Why Choose Us?
               </h2>
@@ -190,24 +303,28 @@ const Home = () => {
                 achieve your health goals.
               </p>
               <button
-                className="mt-6 border-2 border-Quaternary text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-Quaternary transition"
+                className="mt-6 border-2 hover:scale-110 border-Quaternary text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-Quaternary transition"
                 onClick={() => navigate(`/signup`)}
               >
                 Start Your Journey Today
               </button>
-            </div>
+            </motion.div>
 
             {/* Right Side - Image */}
-            <div className="w-full md:w-1/2 flex justify-center items-center p-8">
+            <motion.div
+              className="w-full md:w-1/2 flex justify-center items-center p-8"
+              variants={sectionVariants}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
               <img
                 src="/thumbsup.jpeg"
                 alt="Importance of Our App"
                 className="max-w-full h-auto rounded-xl object-cover"
               />
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 };

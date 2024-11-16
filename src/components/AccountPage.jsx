@@ -82,7 +82,7 @@ const AccountPage = () => {
               {/* Update Settings Button */}
               <button
                 onClick={() => setActiveTab("updateSettings")}
-                className="w-full bg-Quaternary text-white font-semibold py-2 rounded-md hover:bg-Quaternary transition mt-6"
+                className="w-full bg-Quaternary text-white hover:scale-105  font-semibold py-2 rounded-full hover:bg-Quaternary transition mt-6"
               >
                 Update Account Information
               </button>
@@ -90,18 +90,17 @@ const AccountPage = () => {
               {/* Logout Button */}
               <button
                 onClick={handleLogout}
-                className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600 transition mt-4"
+                className="w-full bg-blue-500 hover:scale-105  text-white font-semibold py-2 rounded-full hover:bg-blue-600 transition mt-4"
               >
                 Logout
               </button>
               {/* Delete Account Button */}
               <button
                 onClick={() => setActiveTab("deleteAccount")}
-                className="w-full bg-red-500 text-white font-semibold py-2 rounded-md hover:bg-red-600 transition mt-4"
+                className="w-full bg-red-500 hover:scale-105  text-white font-semibold py-2 rounded-full hover:bg-red-600 transition mt-4"
               >
                 Delete Account
               </button>
-
             </div>
           )}
 
