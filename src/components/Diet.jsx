@@ -91,7 +91,7 @@ const Diet = () => {
   }, [foodList]);
 
   const addEachFood = async() => {
-    await fetch('http://localhost:9088/diet/'+sessionStorage.getItem('userId')+'/add-food/'+selectedFood, 
+    await fetch('http://localhost:9088/diet/'+sessionStorage.getItem('userId')+'/add-food/'+selectedFood+'?grams='+grams, 
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ const Diet = () => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json',
         'Authorization': 'Bearer '+sessionStorage.getItem('token')
-      },
+      }
     })
     if(await response.json() === null)
     {
