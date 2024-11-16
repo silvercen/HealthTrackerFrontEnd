@@ -13,23 +13,27 @@ const WellBeing = () => {
 
   const handleSubmit = async () => {
     if ( await sendWellbeing() === true) {
+      setSleepHours("")
+      setMood("")
       setSubmitted(true);
     }
   };
 
   async function sendWellbeing()
   {
-    const response = await fetch('http://localhost:9094/wellbeing?userId=123',
+    const response = await fetch('http://localhost:9088/wellbeing?userId='+sessionStorage.getItem('userId'),
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // "Authorization": sessionStorage.getItem('token')
+          "Authorization": sessionStorage.getItem('token')
         },
         body: JSON.stringify(wellbeing)
       })
     
-    if (response.text() === 'Wellbeing Saved' || response.text() === 'Wellbeing Updated')
+    const responseText = await response.text()
+
+    if (responseText === 'Wellbeing Saved' || responseText === 'Wellbeing Updated')
     {
       return true;
     }
@@ -114,6 +118,7 @@ const WellBeing = () => {
             </div>
 
             <button
+              type="submit"
               onClick={handleSubmit}
               className="w-full bg-Quaternary text-white font-semibold py-2 rounded-md hover:bg-Quaternary transition"
             >
