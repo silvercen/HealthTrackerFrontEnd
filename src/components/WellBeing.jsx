@@ -1,15 +1,43 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 
 const WellBeing = () => {
+  navigate = useNavigate()
   const [sleepHours, setSleepHours] = useState("");
   const [mood, setMood] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const wellbeing = {
+    sleepTimer: sleepHours,
+    mood: mood
+  }
 
-  const handleSubmit = () => {
-    if (sleepHours && mood) {
+  const handleSubmit = async () => {
+    if ( await sendWellbeing() === true) {
       setSubmitted(true);
     }
   };
+
+  async function sendWellbeing()
+  {
+    const response = await fetch('http://localhost:9088/wellbeing?userId=' + sessionStorage.getItem('userId'),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": sessionStorage.getItem('token')
+        },
+        body: JSON.stringify(wellbeing)
+      })
+    
+    if (response.text() === 'Wellbeing Saved')
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
 
   return (
     <div className="min-h-screen py-10 flex">
