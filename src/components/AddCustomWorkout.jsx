@@ -101,7 +101,7 @@ const AddCustomWorkout = ({ onAddCustomWorkout }) => {
           <div className="mt-4 flex justify-end">
             <button
               type="submit"
-              className="bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-Quaternary transition"
+              className="bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
             >
               Add Workout
             </button>

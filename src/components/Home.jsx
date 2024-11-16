@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import IconGym from "../assets/IconGym";
 import IconFoodOutline from "../assets/IconFoodOutline";
 import IconMentalHealthFill from "../assets/IconMentalHealthFill";
+import IconHeartbeat from "../assets/IconHeartBeat";
 import { useAuth } from "./AuthContext";
 
 const Home = () => {
@@ -12,9 +13,9 @@ const Home = () => {
   const [fadeClass, setFadeClass] = useState("opacity-100");
 
   const images = [
-    "/fitness_image.jpeg",
-    "/diet_image.jpeg",
-    "/sleep_image.jpg",
+    "/gym.jpeg",
+    "/diet.jpeg",
+    "/sleep.jpeg",
   ];
 
   useEffect(() => {
@@ -64,7 +65,7 @@ const Home = () => {
                 Sign Up
               </button>
               <button
-                className="bg-transparent border-2 border-white text-white font-semibold px-6 py-2 rounded-full hover:bg-Quaternary hover:text-Primary transition"
+                className="bg-transparent border-2 border-white text-white font-semibold px-6 py-2 rounded-full hover:bg-Quaternary  transition"
                 onClick={() => navigate(`/login`)}
               >
                 Login
@@ -86,11 +87,22 @@ const Home = () => {
       </header>
 
       {/* Features Section */}
-      <section className="py-16 relative z-10 font-poppins">
+      <section className="pb-16 relative z-10 font-poppins">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-Secondary text-center mb-8">
-            What We Offer
-          </h2>
+
+            <h2 className="text-3xl font-bold text-Secondary text-center mb-8">
+              <div className="flex items-center justify-center space-x-2">
+                <IconHeartbeat
+                  style={{ width: "40px", height: "40px", color: "#ff0000" }}
+                />
+                <span className="text-Secondary text-4xl font-geist font-semibold">
+                  Vitalis
+                </span>
+              </div>
+            <p className=" pt-1 font-poppins font-normal text-lg">The Complete Health Tracker</p>
+            </h2>
+
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Card 1 - Fitness Tracking */}
             <div className="bg-Grey bg-opacity-40 backdrop-blur-lg rounded-lg shadow-lg overflow-hidden group transition">
@@ -158,7 +170,7 @@ const Home = () => {
         </div>
       </section>
       {/* Importance Section */}
-      <section className="py-16 relative z-10 font-poppins  ">
+      <section className="py-16 relative z-10 font-poppins">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center bg-Grey bg-opacity-40 backdrop-blur-lg rounded-lg shadow-xl overflow-hidden">
             {/* Left Side - Text */}
@@ -178,7 +190,7 @@ const Home = () => {
                 achieve your health goals.
               </p>
               <button
-                className="mt-6 border border-Quaternary text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-Quaternary transition"
+                className="mt-6 border-2 border-Quaternary text-white font-semibold px-6 py-3 rounded-full shadow-lg hover:bg-Quaternary transition"
                 onClick={() => navigate(`/signup`)}
               >
                 Start Your Journey Today
@@ -186,11 +198,11 @@ const Home = () => {
             </div>
 
             {/* Right Side - Image */}
-            <div className="w-full md:w-1/2">
+            <div className="w-full md:w-1/2 flex justify-center items-center p-8">
               <img
-                src="/importance_image.jpg"
+                src="/thumbsup.jpeg"
                 alt="Importance of Our App"
-                className="w-full h-full object-cover"
+                className="max-w-full h-auto rounded-xl object-cover"
               />
             </div>
           </div>

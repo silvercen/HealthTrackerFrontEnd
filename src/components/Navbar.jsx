@@ -51,7 +51,7 @@ const Navbar = () => {
       setContent(
         // <div className="h-8 w-8 rounded-full border-2 border-white hover:border-Quaternary cursor-pointer bg-Secondary flex items-center justify-center text-white font-semibold">
         <button
-          className="font-poppins bg-Grey bg-opacity-40 flex space-x-1 border border-Secondary rounded-full px-2 py-1 text-Secondary hover:bg-Quaternary hover:text-Secondary"
+          className="font-poppins bg-Grey bg-opacity-40 flex space-x-1 border-2 border-Secondary rounded-full px-2 py-1 text-Secondary hover:bg-Quaternary hover:text-Secondary"
           onClick={() => navigate("/login")}
         >
           Login
@@ -83,17 +83,17 @@ const Navbar = () => {
               style={{ width: "24px", height: "24px", color: "#ff0000" }}
             />
             <span
-              className="text-Secondary ml-2 text-lg font-geist font-semibold"
+              className="text-Secondary ml-2 text-xl font-geist font-semibold"
               style={{ cursor: "pointer" }}
               
             >
-              HealthTrackerApp
+              Vitalis
             </span>
           </div>
 
           {/* Centered Navigation Links with White Rounded Border */}
           <div className="flex items-center justify-center flex-grow " style={{marginLeft:'3em'}}>
-            <div className="flex space-x-1 bg-opacity-10 font-poppins cursor-pointer border border-Secondary rounded-full px-2 py-1">
+            <div className="flex space-x-1 bg-opacity-10 font-poppins cursor-pointer  border-Secondary border-2 rounded-full px-2 py-1">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
