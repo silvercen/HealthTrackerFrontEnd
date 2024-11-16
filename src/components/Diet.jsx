@@ -91,7 +91,7 @@ const Diet = () => {
   }, [foodList]);
 
   const addEachFood = async() => {
-    await fetch('http://localhost:9093/diet/'+sessionStorage.getItem('userId')+'/add-food/'+selectedFood, 
+    await fetch('http://localhost:9088/diet/'+sessionStorage.getItem('userId')+'/add-food/'+selectedFood, 
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ const Diet = () => {
 
   const saveFoodLog = async () => {
     // Save logic goes here, e.g., sending foodList data to a backend or saving locally
-    const response = await fetch('http://localhost:9093/diet/'+sessionStorage.getItem('userId')+'/save-diet',
+    const response = await fetch('http://localhost:9088/diet/'+sessionStorage.getItem('userId')+'/save-diet',
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json',
