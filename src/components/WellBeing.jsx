@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
 const WellBeing = () => {
-  navigate = useNavigate()
+  const navigate = useNavigate()
   const [sleepHours, setSleepHours] = useState("");
   const [mood, setMood] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const wellbeing = {
-    sleepTimer: sleepHours,
+    sleepTime: sleepHours,
     mood: mood
   }
 
@@ -19,17 +19,17 @@ const WellBeing = () => {
 
   async function sendWellbeing()
   {
-    const response = await fetch('http://localhost:9088/wellbeing?userId=' + sessionStorage.getItem('userId'),
+    const response = await fetch('http://localhost:9094/wellbeing?userId=123',
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": sessionStorage.getItem('token')
+          // "Authorization": sessionStorage.getItem('token')
         },
         body: JSON.stringify(wellbeing)
       })
     
-    if (response.text() === 'Wellbeing Saved')
+    if (response.text() === 'Wellbeing Saved' || response.text() === 'Wellbeing Updated')
     {
       return true;
     }
