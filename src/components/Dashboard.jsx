@@ -309,10 +309,10 @@ const Dashboard = () => {
             ))}
           </ul>
           <Line data={fitnessChartData} options={{ responsive: true }} />
-          <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
+          {/* <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
             Workout Type Distribution
-          </h3>
-          <Pie data={fitnessPieChartData} options={{ responsive: true }} />
+          </h3> */}
+          {/* <Pie data={fitnessPieChartData} options={{ responsive: true }} /> */}
         </div>
 
         {/* Diet Section */}
@@ -334,10 +334,10 @@ const Dashboard = () => {
             ))}
           </ul>
           <Bar data={dietChartData} options={{ responsive: true }} />
-          <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
+          {/* <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
             Meal Calorie Distribution
-          </h3>
-          <Pie data={dietPieChartData} options={{ responsive: true }} />
+          </h3> */}
+          {/* <Pie data={dietPieChartData} options={{ responsive: true }} /> */}
         </div>
 
         {/* Wellbeing Section */}
@@ -352,10 +352,10 @@ const Dashboard = () => {
             Mood: {wellbeingData.mood}
           </p>
           <Line data={wellbeingChartData} options={{ responsive: true }} />
-          <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
+          {/* <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
             Mood Distribution
-          </h3>
-          <Pie data={wellbeingPieChartData} options={{ responsive: true }} />
+          </h3> */}
+          {/* <Pie data={wellbeingPieChartData} options={{ responsive: true }} /> */}
         </div>
       </div>
 

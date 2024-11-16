@@ -87,7 +87,7 @@ const WellBeing = () => {
 
             <button
               onClick={handleSubmit}
-              className="w-full bg-Quaternary text-white font-semibold py-2 rounded-md hover:bg-Quaternary transition"
+              className="w-full bg-Quaternary text-white font-semibold py-2 rounded-md hover:bg-teal-500 transition"
             >
               Submit
             </button>
