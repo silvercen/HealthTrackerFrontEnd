@@ -12,9 +12,9 @@ const Home = () => {
   const [fadeClass, setFadeClass] = useState("opacity-100");
 
   const images = [
-    "/fitness_image.jpeg",
-    "/diet_image.jpeg",
-    "/sleep_image.jpg",
+    "/gym.jpeg",
+    "/diet.jpeg",
+    "/sleep.jpeg",
   ];
 
   useEffect(() => {
@@ -186,11 +186,11 @@ const Home = () => {
             </div>
 
             {/* Right Side - Image */}
-            <div className="w-full md:w-1/2">
+            <div className="w-full ">
               <img
-                src="/importance_image.jpg"
+                src="/thumbsup.jpeg"
                 alt="Importance of Our App"
-                className="w-full h-full object-cover"
+                className="w-full h-full rounded-xl object-cover "
               />
             </div>
           </div>
