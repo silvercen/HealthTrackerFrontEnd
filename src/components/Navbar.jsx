@@ -54,7 +54,7 @@ const Navbar = () => {
           className="font-poppins bg-Grey bg-opacity-40 flex space-x-1 border-2 hover:scale-110 border-Secondary rounded-full px-2 py-1 text-Secondary hover:bg-Quaternary hover:text-Secondary"
           onClick={() => navigate("/login")}
         >
-          Login
+          Log in
         </button>
         // </div>
       );

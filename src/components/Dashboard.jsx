@@ -76,6 +76,37 @@ const Dashboard = () => {
     sleepMoodCounts: [2, 1, 4],
   };
 
+  // Utility to format the date (YYYY-MM-DD)
+  const formatDate = (date) => date.toISOString().split("T")[0];
+
+  // Today's date
+  const todayDate = formatDate(new Date());
+
+  // Mock data for daily activity
+  const dailyLogs = [
+    {
+      date: "2024-11-18", // Update to match today's date
+      workout: "Running - 30 mins",
+      food: "Breakfast - 500 kcal, Lunch - 800 kcal, Dinner - 700 kcal",
+      mood: "Excellent",
+    },
+    {
+      date: "2024-11-17",
+      workout: "Cycling - 45 mins",
+      food: "Snacks - 200 kcal",
+      mood: "Good",
+    },
+    {
+      date: "2024-11-16",
+      workout: "Yoga - 60 mins",
+      food: "Dinner - 700 kcal",
+      mood: "Fair",
+    },
+  ];
+
+  // Find today's log
+  const todaysLog = dailyLogs.find((log) => log.date === todayDate);
+
   const maintenanceCalories = 1800;
 
   const weeklyAverageCaloriesConsumed = (
@@ -281,7 +312,49 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Today's Activity Section */}
+      <div className="bg-Grey bg-opacity-40 backdrop-blur-lg mt-8 p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold text-Quaternary mb-4">
+          Today's Activity
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Workout Card */}
+          <div className="bg-White border-2 border-Quaternary hover:scale-105 transition p-4 rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold text-Quaternary mb-2">
+              Workout
+            </h3>
+            {todaysLog ? (
+              <p className="text-Secondary">{todaysLog.workout}</p>
+            ) : (
+              <p className="text-Secondary">No workout logged today.</p>
+            )}
+          </div>
+
+          {/* Diet Card */}
+          <div className="bg-White border-2 hover:scale-105 transition border-Quaternary p-4 rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold text-Quaternary mb-2">Diet</h3>
+            {todaysLog ? (
+              <p className="text-Secondary">{todaysLog.food}</p>
+            ) : (
+              <p className="text-Secondary">No meals logged today.</p>
+            )}
+          </div>
+
+          {/* Mood Card */}
+          <div className="bg-White p-4 border-2 hover:scale-105 transition border-Quaternary rounded-lg shadow-md">
+            <h3 className="text-xl font-semibold   text-Quaternary mb-2">
+              Mood
+            </h3>
+            {todaysLog ? (
+              <p className="text-Secondary">{todaysLog.mood}</p>
+            ) : (
+              <p className="text-Secondary">No mood logged today.</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 mt-8 md:grid-cols-3 gap-8">
         {/* Fitness Section */}
         <div className="bg-Grey hover:scale-105 transition bg-opacity-40 backdrop-blur-lg p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold text-Quaternary mb-4 flex items-center space-x-2">
