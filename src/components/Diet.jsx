@@ -1,35 +1,58 @@
 import React, { useState, useEffect } from "react";
 import AddCustomFood from "./AddCustomFood";
+import { Navigate, useNavigate } from "react-router-dom";
+import { parse } from "postcss";
 
-const foodOptions = [
-  { name: "Apple", caloriesPer100g: 52, proteinPer100g: 0.3, fatPer100g: 0.2 },
-  { name: "Banana", caloriesPer100g: 89, proteinPer100g: 1.1, fatPer100g: 0.3 },
-  { name: "Salad", caloriesPer100g: 15, proteinPer100g: 1.2, fatPer100g: 0.2 },
-  {
-    name: "Chicken Breast",
-    caloriesPer100g: 165,
-    proteinPer100g: 31,
-    fatPer100g: 3.6,
-  },
-  { name: "Rice", caloriesPer100g: 130, proteinPer100g: 2.4, fatPer100g: 0.3 },
-];
+// Fetch food data from API
+
+const fetchFoodData = async () => {
+  try {
+    const response = await fetch(
+      "https://sharunraj.github.io/foodApi.github.io/FoodAPI.json"
+    );
+    const data = await response.json();
+    return data.map((food) => ({
+      name: food.foodName,
+      caloriesPer100g: food.avgCalories,
+      proteinPer100g: food.foodProtein,
+      fatPer100g: food.foodFat,
+    }));
+  } catch (error) {
+    console.error("Error fetching food data:", error);
+    Navigate('/bad-request', {state: {errorType: 'bad-request'}});
+    return []; 
+  }
+};
 
 const Diet = () => {
+  const navigate = useNavigate();
+  const [foodOptions, setFoodOptions] = useState([]);
   const [selectedFood, setSelectedFood] = useState("");
   const [grams, setGrams] = useState("");
   const [foodList, setFoodList] = useState([]);
   const [totalCalories, setTotalCalories] = useState(0);
   const [totalProtein, setTotalProtein] = useState(0);
+  const [totalSugar, setTotalSugar] = useState(0);
   const [totalFat, setTotalFat] = useState(0);
 
+  // Fetch food options when the component mounts
+  useEffect(() => {
+    const loadFoodData = async () => {
+      const foods = await fetchFoodData();
+      setFoodOptions(foods);
+    };
+    loadFoodData();
+  }, []);
+
   // Handle adding a food item to the list with portion size in grams
-  const addFood = () => {
+  const addFood = async () => {
     if (!selectedFood || !grams) return;
 
     const food = foodOptions.find((f) => f.name === selectedFood);
     const calories = (parseFloat(grams) * food.caloriesPer100g) / 100;
     const protein = (parseFloat(grams) * food.proteinPer100g) / 100;
     const fat = (parseFloat(grams) * food.fatPer100g) / 100;
+    const sugar = (parseFloat(grams) * food.sugarPer100g)/100;
 
     const foodWithDetails = {
       name: food.name,
@@ -37,9 +60,11 @@ const Diet = () => {
       calories: Math.round(calories),
       protein: Math.round(protein * 10) / 10,
       fat: Math.round(fat * 10) / 10,
+      sugar: Math.round(sugar * 10) / 10,
     };
 
     setFoodList([...foodList, foodWithDetails]);
+    await addEachFood()
     setSelectedFood("");
     setGrams("");
   };
@@ -57,21 +82,48 @@ const Diet = () => {
     );
     const totalProtein = foodList.reduce((sum, food) => sum + food.protein, 0);
     const totalFat = foodList.reduce((sum, food) => sum + food.fat, 0);
+    const totalSugar = foodList.reduce((sum, food) => sum + food.sugar, 0);
 
     setTotalCalories(totalCalories);
     setTotalProtein(totalProtein);
     setTotalFat(totalFat);
+    setTotalSugar(totalSugar);
   }, [foodList]);
 
-  const saveFoodLog = () => {
+  const addEachFood = async() => {
+    await fetch('http://localhost:9088/diet/'+sessionStorage.getItem('userId')+'/add-food/'+selectedFood+'?grams='+grams, 
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+sessionStorage.getItem('token')
+      }
+    });
+  }
+
+  const saveFoodLog = async () => {
     // Save logic goes here, e.g., sending foodList data to a backend or saving locally
+    const response = await fetch('http://localhost:9088/diet/'+sessionStorage.getItem('userId')+'/save-diet',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+sessionStorage.getItem('token')
+      }
+    })
+    if(await response.json() === null)
+    {
+      navigate('/bad-request')
+    }
+    else
+    {
+      navigate('/')
+    }
     alert("Food log saved!");
   };
 
   return (
     <div className="min-h-screen font-poppins py-10">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-center mb-8 text-Quaternary">
+        <h2 className="text-3xl underline font-bold text-center mb-8 text-Quaternary">
           Daily Diet Tracker
         </h2>
 
@@ -106,7 +158,7 @@ const Diet = () => {
 
             <button
               onClick={addFood}
-              className="bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-Quaternary transition"
+              className="bg-Quaternary hover:scale-105  text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
             >
               Add
             </button>
@@ -167,7 +219,7 @@ const Diet = () => {
           </div>
           <button
             onClick={saveFoodLog}
-            className="mt-6 w-full bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-Quaternary transition"
+            className="mt-6 w-full hover:scale-105  bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
           >
             Save Food Log
           </button>

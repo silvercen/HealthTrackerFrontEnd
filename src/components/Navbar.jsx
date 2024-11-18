@@ -49,11 +49,14 @@ const Navbar = () => {
       );
     } else {
       setContent(
-        <div className="h-8 w-8 rounded-full border-2 border-white hover:border-Quaternary cursor-pointer bg-Secondary flex items-center justify-center text-white font-semibold">
-          <button className="bg-transparent border-2 border-white text-white font-semibold px-6 py-2 rounded-full hover:bg-Quaternary hover:text-Primary transition">
-            Login
-          </button>
-        </div>
+        // <div className="h-8 w-8 rounded-full border-2 border-white hover:border-Quaternary cursor-pointer bg-Secondary flex items-center justify-center text-white font-semibold">
+        <button
+          className="font-poppins bg-Grey bg-opacity-40 flex space-x-1 border-2 hover:scale-110 border-Secondary rounded-full px-2 py-1 text-Secondary hover:bg-Quaternary hover:text-Secondary"
+          onClick={() => navigate("/login")}
+        >
+          Log in
+        </button>
+        // </div>
       );
     }
   }, [isLoggedIn]);
@@ -75,22 +78,27 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           {/* Left side - Logo and App Name */}
-          <div className="flex items-center" onClick={() => navigate("/")}>
+          <div
+            className="flex items-center absolute"
+            onClick={() => navigate("/")}
+          >
             <IconHeartbeat
               style={{ width: "24px", height: "24px", color: "#ff0000" }}
             />
             <span
-              className="text-Secondary ml-2 text-lg font-semibold"
-              style={{ cursor: "default" }}
-              
+              className="text-Secondary ml-2 text-xl font-geist font-semibold"
+              style={{ cursor: "pointer" }}
             >
-              HealthTrackerApp
+              Vitalis
             </span>
           </div>
 
           {/* Centered Navigation Links with White Rounded Border */}
-          <div className="flex items-center justify-center flex-grow " style={{marginLeft:'-9em'}}>
-            <div className="flex space-x-1 bg-opacity-10 border border-Secondary rounded-full px-2 py-1">
+          <div
+            className="flex items-center justify-center flex-grow "
+            style={{ marginLeft: "3em" }}
+          >
+            <div className="flex space-x-1 bg-opacity-10 hover:scale-110 transition font-poppins cursor-pointer  border-Secondary border-2 rounded-full px-2 py-1">
               {navLinks.map((link) => (
                 <a
                   key={link.name}

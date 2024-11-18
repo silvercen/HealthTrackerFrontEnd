@@ -1,16 +1,50 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 
 const WellBeing = () => {
+  const navigate = useNavigate()
   const [sleepHours, setSleepHours] = useState("");
   const [mood, setMood] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const wellbeing = {
+    sleepTime: sleepHours,
+    mood: mood
+  }
 
-  const handleSubmit = () => {
-    if (sleepHours && mood) {
+  const handleSubmit = async () => {
+    if ( await sendWellbeing() === true) {
+      setSleepHours("")
+      setMood("")
       setSubmitted(true);
     }
   };
 
+  async function sendWellbeing()
+  {
+    const response = await fetch('http://localhost:9088/wellbeing?userId='+sessionStorage.getItem('userId'),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": sessionStorage.getItem('token')
+        },
+        body: JSON.stringify(wellbeing)
+      })
+    
+    const responseText = await response.text()
+
+    if (responseText === 'Wellbeing Saved' || responseText === 'Wellbeing Updated')
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+
+
+  
   return (
     <div className="min-h-screen py-10 flex">
       {/* Left side: Content about Mental Health and Sleep */}
@@ -86,8 +120,9 @@ const WellBeing = () => {
             </div>
 
             <button
+              type="submit"
               onClick={handleSubmit}
-              className="w-full bg-Quaternary text-white font-semibold py-2 rounded-md hover:bg-Quaternary transition"
+              className="w-full bg-Quaternary text-white font-semibold py-2 rounded-md hover:bg-teal-500 transition"
             >
               Submit
             </button>

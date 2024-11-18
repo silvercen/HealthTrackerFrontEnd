@@ -80,7 +80,7 @@ const AddCustomFood = ({ addCustomFood }) => {
         />
         <button
           onClick={handleSubmit}
-          className="bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-indigo-500 transition"
+          className="bg-Quaternary hover:scale-105  text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
         >
           Add Custom Food
         </button>

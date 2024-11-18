@@ -1,32 +1,75 @@
 import React, { useState, useEffect } from "react";
 import AddCustomWorkout from "./AddCustomWorkout";
+import { useNavigate } from "react-router-dom";
 
-// Mock workout data to simulate fetching from an API
-const workoutOptions = [
-  { name: "Running", calories: 500 },
-  { name: "Cycling", calories: 400 },
-  { name: "Swimming", calories: 600 },
-  { name: "Weightlifting", calories: 300 },
-  { name: "Yoga", calories: 200 },
-];
+// Fetch workout data from API
+const fetchWorkoutData = async () => {
+  try {
+    const response = await fetch(
+      "https://sharunraj.github.io/fitnessApi.github.io/FitnessAPI.json"
+    );
+    const data = await response.json();
+    return data.map((workout) => ({
+      name: workout.workoutName,
+      calories: workout.caloriesBurned,
+      id: workout.workoutId,
+    }));
+  } catch (error) {
+    console.error("Error fetching workout data:", error);
+    return [];
+  }
+};
 
 const Fitness = () => {
+  const navigate = useNavigate();
+  const [workoutOptions, setWorkoutOptions] = useState([]);
   const [selectedWorkout, setSelectedWorkout] = useState("");
+  const [sets, setSets] = useState("");
+  const [reps, setReps] = useState("");
+  const [duration, setDuration] = useState("");
   const [workoutList, setWorkoutList] = useState([]);
   const [totalCalories, setTotalCalories] = useState(0);
 
-  // Handle adding a workout to the list
-  const addWorkout = () => {
-    if (!selectedWorkout) return;
+  // Fetch workout options when the component mounts
+  useEffect(() => {
+    const loadWorkoutData = async () => {
+      const workouts = await fetchWorkoutData();
+      setWorkoutOptions(workouts);
+    };
+    loadWorkoutData();
+  }, []);
+
+  // Handle adding a workout with sets, reps, and duration
+  const addWorkout = async () => {
+    if (!selectedWorkout || !sets || !reps || !duration) return;
 
     const workout = workoutOptions.find((w) => w.name === selectedWorkout);
-    setWorkoutList([...workoutList, workout]);
+    const caloriesBurned =
+      (parseInt(sets) *
+        parseInt(reps) *
+        workout.calories *
+        parseInt(duration)) /
+      60; // Example calculation
+
+    const workoutWithDetails = {
+      name: workout.name,
+      sets: parseInt(sets),
+      reps: parseInt(reps),
+      duration: parseInt(duration),
+      calories: Math.round(caloriesBurned),
+    };
+
+    setWorkoutList([...workoutList, workoutWithDetails]);
+    await addEachWorkout(workoutWithDetails);
     setSelectedWorkout("");
+    setSets("");
+    setReps("");
+    setDuration("");
   };
 
-  // Handle adding a custom workout
-  const addCustomWorkout = (workout) => {
-    setWorkoutList([...workoutList, workout]);
+  // Add a custom workout
+  const addCustomWorkout = (customWorkout) => {
+    setWorkoutList([...workoutList, customWorkout]);
   };
 
   // Calculate total calories whenever workoutList changes
@@ -38,19 +81,52 @@ const Fitness = () => {
     setTotalCalories(total);
   }, [workoutList]);
 
+  const addEachWorkout = async (workoutWithDetails) => {
+    await fetch(
+      `http://localhost:9088/health/fitness/${sessionStorage.getItem('userId')}/add-workout?workoutName=${workoutWithDetails.name}&inputReps=${workoutWithDetails.reps}&inputSets=${workoutWithDetails.sets}&inputDuration=${workoutWithDetails.duration}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer '+sessionStorage.getItem('token')
+        }
+      }
+    );
+  };
+
+  const saveFitnessLog = async () => {
+    const response = await fetch(
+      "http://localhost:9088/health/fitness/"+sessionStorage.getItem('userId')+"/save-workouts",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer '+sessionStorage.getItem('token')
+        }
+      }
+    );
+    if ((await response.json()) === null) {
+      navigate("/bad-request");
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-transparent text-white py-10 font-poppins">
+    <div className="min-h-screen font-poppins py-10">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-center mb-8 text-Quaternary">
+        <h2 className="text-3xl font-bold underline text-center mb-8 text-Quaternary">
           Daily Workout Tracker
         </h2>
 
         {/* Add Workout Section */}
-        <div className="bg-Grey bg-opacity-40 backdrop-blur-lg shadow-md rounded-lg p-6 mb-8 border border-Quaternary">
-          <h3 className="text-xl font-semibold mb-4 text-white">Add Workout</h3>
-          <div className="flex items-center space-x-4">
+        <div className="bg-Grey border border-Quaternary bg-opacity-40 backdrop-blur-lg shadow-xl rounded-lg p-6 mb-8">
+          <h3 className="text-xl font-semibold mb-4 text-Secondary">
+            Add Workout
+          </h3>
+          <div className="flex flex-col space-y-4">
             <select
-              className="border border-Grey  rounded-md p-2 w-full  text-Grey focus:ring-Quaternary focus:border-Quaternary"
+              className="border border-gray-300 rounded-md p-2 w-full focus:ring-Quaternary focus:border-Quaternary text-Grey"
               value={selectedWorkout}
               onChange={(e) => setSelectedWorkout(e.target.value)}
             >
@@ -61,9 +137,34 @@ const Fitness = () => {
                 </option>
               ))}
             </select>
+            {selectedWorkout && (
+              <>
+                <input
+                  type="number"
+                  className="border border-gray-300 rounded-md p-2 w-full focus:ring-Quaternary focus:border-Quaternary text-Grey"
+                  placeholder="Enter sets"
+                  value={sets}
+                  onChange={(e) => setSets(e.target.value)}
+                />
+                <input
+                  type="number"
+                  className="border border-gray-300 rounded-md p-2 w-full focus:ring-Quaternary focus:border-Quaternary text-Grey"
+                  placeholder="Enter reps per set"
+                  value={reps}
+                  onChange={(e) => setReps(e.target.value)}
+                />
+                <input
+                  type="number"
+                  className="border border-gray-300 rounded-md p-2 w-full focus:ring-Quaternary focus:border-Quaternary text-Grey"
+                  placeholder="Enter duration in minutes"
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                />
+              </>
+            )}
             <button
               onClick={addWorkout}
-              className="bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-Quaternary transition"
+              className="bg-Quaternary hover:scale-105  text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
             >
               Add
             </button>
@@ -74,8 +175,8 @@ const Fitness = () => {
         <AddCustomWorkout onAddCustomWorkout={addCustomWorkout} />
 
         {/* Workout List and Total Calories Section */}
-        <div className="bg-Grey shadow-lg bg-opacity-40 backdrop-blur-lg rounded-lg p-6 border border-Quaternary">
-          <h3 className="text-xl font-semibold mb-4 text-white">
+        <div className="bg-Grey border border-Quaternary bg-opacity-40 backdrop-blur-lg shadow-xl rounded-lg p-6 mb-4">
+          <h3 className="text-xl font-semibold mb-4 text-Secondary">
             Workout Summary
           </h3>
           {workoutList.length === 0 ? (
@@ -85,16 +186,20 @@ const Fitness = () => {
               {workoutList.map((workout, index) => (
                 <li
                   key={index}
-                  className="flex justify-between items-center p-4 border-b border-Grey"
+                  className="flex justify-between items-center p-4 border-b border-gray-200"
                 >
-                  <span className="font-medium text-white">{workout.name}</span>
+                  <span className="font-medium text-white">
+                    {workout.name} ({workout.sets} sets, {workout.reps} reps,{" "}
+                    {workout.duration} min)
+                  </span>
                   <span className="text-gray-400">{workout.calories} kcal</span>
                 </li>
               ))}
             </ul>
           )}
-          {/* Total Calories */}
-          <div className="flex justify-between items-center pt-4 border-t border-Grey">
+
+          {/* Total Summary */}
+          <div className="flex justify-between items-center pt-4 border-t border-gray-200">
             <span className="text-lg font-semibold text-white">
               Total Calories Burned
             </span>
@@ -102,6 +207,13 @@ const Fitness = () => {
               {totalCalories} kcal
             </span>
           </div>
+
+          <button
+            onClick={saveFitnessLog}
+            className="mt-6 w-full hover:scale-105  bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
+          >
+            Save Fitness Log
+          </button>
         </div>
       </div>
     </div>
