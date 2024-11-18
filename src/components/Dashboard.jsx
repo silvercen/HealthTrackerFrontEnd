@@ -254,7 +254,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen font-poppins p-8">
-      <h1 className="text-5xl font-bold text-center text-Quaternary mb-8">
+      <h1 className="text-5xl underline font-bold  text-center text-Quaternary mb-8">
         Dashboard
       </h1>
       {/* User Info Section */}
