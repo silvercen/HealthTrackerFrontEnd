@@ -7,7 +7,7 @@ function ErrorPage() {
     errorType === "bad-request" ? "Bad Request" : "Page Not Found";
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen text-center text-white bg-gray-900">
+    <div className="flex flex-col items-center justify-center min-h-screen text-center text-white ">
       <h1 className="text-6xl font-bold mb-4">
         {errorType === "bad-request" ? "400" : "404"}
       </h1>
@@ -19,7 +19,7 @@ function ErrorPage() {
       </p>
       <Link
         to="/"
-        className="px-6 py-3 mt-4 text-lg font-semibold text-white bg-Quaternary rounded hover:bg-teal-300"
+        className="px-6 py-3 mt-4 text-lg hover:scale-110 transition border-2  font-semibold text-white  rounded-full hover:bg-Quaternary"
       >
         Go Back Home
       </Link>

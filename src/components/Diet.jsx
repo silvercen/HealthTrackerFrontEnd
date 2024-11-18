@@ -158,7 +158,7 @@ const Diet = () => {
 
             <button
               onClick={addFood}
-              className="bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
+              className="bg-Quaternary hover:scale-105  text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
             >
               Add
             </button>
@@ -219,7 +219,7 @@ const Diet = () => {
           </div>
           <button
             onClick={saveFoodLog}
-            className="mt-6 w-full bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
+            className="mt-6 w-full hover:scale-105  bg-Quaternary text-white font-semibold px-4 py-2 rounded-md hover:bg-teal-500 transition"
           >
             Save Food Log
           </button>

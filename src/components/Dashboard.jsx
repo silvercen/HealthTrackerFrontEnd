@@ -283,7 +283,7 @@ const Dashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Fitness Section */}
-        <div className="bg-Grey bg-opacity-40 backdrop-blur-lg p-6 rounded-lg shadow-md">
+        <div className="bg-Grey hover:scale-105 transition bg-opacity-40 backdrop-blur-lg p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold text-Quaternary mb-4 flex items-center space-x-2">
             Fitness Overview <IconGym />
           </h2>
@@ -316,7 +316,7 @@ const Dashboard = () => {
         </div>
 
         {/* Diet Section */}
-        <div className="bg-Grey bg-opacity-40 backdrop-blur-lg p-6 rounded-lg shadow-md">
+        <div className="bg-Grey bg-opacity-40 hover:scale-105 transition backdrop-blur-lg p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold text-Quaternary mb-4 flex items-center space-x-2">
             Diet Overview <IconFoodOutline />
           </h2>
@@ -341,7 +341,7 @@ const Dashboard = () => {
         </div>
 
         {/* Wellbeing Section */}
-        <div className="bg-Grey bg-opacity-40 backdrop-blur-lg p-6 rounded-lg shadow-md ">
+        <div className="bg-Grey bg-opacity-40 hover:scale-105 transition backdrop-blur-lg p-6 rounded-lg shadow-md ">
           <h2 className="text-2xl font-semibold text-Quaternary mb-4 flex items-center space-x-2 ">
             Wellbeing Overview <IconMentalHealthFill />
           </h2>
