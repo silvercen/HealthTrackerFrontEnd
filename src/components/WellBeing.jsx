@@ -43,52 +43,15 @@ const WellBeing = () => {
     }
   }
 
-  const getSuggestion = () => {
-    if (!mood || !sleepHours) return "";
 
-    const suggestions = {
-      Happy: {
-        lowSleep:
-          "Feeling happy with little sleep? Enjoy it, but aim for a regular sleep schedule!",
-        goodSleep: "Great to hear you're happy and well-rested!",
-      },
-      Sad: {
-        lowSleep:
-          "Low sleep can worsen sadness. Prioritize a good night's sleep tonight.",
-        goodSleep:
-          "Feeling sad even with good sleep? Consider talking to a therapist or counselor.",
-      },
-      Neutral: {
-        lowSleep:
-          "Feeling neutral with low sleep might impact your mood later. Aim for better sleep!",
-        goodSleep:
-          "Neutral mood with good sleep is a good sign! Consider activities to boost your mood further.",
-      },
-      Stressed: {
-        lowSleep:
-          "Stress and low sleep can be a vicious cycle. Try relaxation techniques before bed.",
-        goodSleep:
-          "Getting good sleep despite stress is great! Consider stress management techniques.",
-      },
-      Relaxed: {
-        lowSleep:
-          "Feeling relaxed despite low sleep might be temporary. Aim for a regular sleep schedule.",
-        goodSleep: "Relaxed and well-rested sounds like a perfect combination!",
-      },
-    };
-
-    const sleepCategory = sleepHours < 7 ? "lowSleep" : "goodSleep";
-    return suggestions[mood][sleepCategory];
-  };
-
+  
   return (
     <div className="min-h-screen py-10 flex">
       {/* Left side: Content about Mental Health and Sleep */}
       <div className="flex-1 p-10 bg-LightGrey text-Secondary">
         <h2 className="text-4xl font-bold mb-4 italic text-Secondary">
-          "A good laugh and a long{" "}
-          <span className="text-Quaternary underline">sleep</span> are the best
-          cures in the doctor’s book."
+          "A good laugh and a long <span className="text-Quaternary underline">sleep</span> are the best cures in the
+          doctor’s book."
         </h2>
         <h2 className="text-4xl font-bold mb-4 italic text-Secondary">
           -Thomas Dekker
@@ -169,16 +132,14 @@ const WellBeing = () => {
             <h3 className="text-2xl font-semibold text-Secondary mb-4">
               Thank you for sharing!
             </h3>
-            {/* <p className="text-lg text-Secondary mb-2">
+            <p className="text-lg text-Secondary mb-2">
               You slept {sleepHours} hours last night.
             </p>
             <p className="text-lg text-Secondary">
               You are feeling{" "}
               <span className="font-semibold text-Quaternary">{mood}</span>{" "}
               today.
-            </p> */}
-            {/* Sleep and mood display */}
-            <p className="text-lg text-Secondary mb-4">{getSuggestion()}</p>
+            </p>
           </div>
         )}
       </div>
