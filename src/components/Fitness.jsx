@@ -83,12 +83,12 @@ const Fitness = () => {
 
   const addEachWorkout = async (workoutWithDetails) => {
     await fetch(
-      `http://localhost:9092/health/fitness/123/add-workout?workoutName=${workoutWithDetails.name}&inputReps=${workoutWithDetails.reps}&inputSets=${workoutWithDetails.sets}&inputDuration=${workoutWithDetails.duration}`,
+      `http://localhost:9088/health/fitness/${sessionStorage.getItem('userId')}/add-workout?workoutName=${workoutWithDetails.name}&inputReps=${workoutWithDetails.reps}&inputSets=${workoutWithDetails.sets}&inputDuration=${workoutWithDetails.duration}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // 'Authorization': 'Bearer '+sessionStorage.getItem('token')
+          'Authorization': 'Bearer '+sessionStorage.getItem('token')
         }
       }
     );
@@ -96,12 +96,12 @@ const Fitness = () => {
 
   const saveFitnessLog = async () => {
     const response = await fetch(
-      "http://localhost:9092/health/fitness/123/save-workouts",
+      "http://localhost:9088/health/fitness/"+sessionStorage.getItem('userId')+"/save-workouts",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // 'Authorization': 'Bearer '+sessionStorage.getItem('token')
+          'Authorization': 'Bearer '+sessionStorage.getItem('token')
         }
       }
     );
