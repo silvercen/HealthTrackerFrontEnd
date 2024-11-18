@@ -60,7 +60,7 @@ const Fitness = () => {
     };
 
     setWorkoutList([...workoutList, workoutWithDetails]);
-    await addEachWorkout();
+    await addEachWorkout(workoutWithDetails);
     setSelectedWorkout("");
     setSets("");
     setReps("");
@@ -81,26 +81,28 @@ const Fitness = () => {
     setTotalCalories(total);
   }, [workoutList]);
 
-  const addEachWorkout = async () => {
+  const addEachWorkout = async (workoutWithDetails) => {
     await fetch(
-      "http://localhost:9093/fitness/123/add-workout/" + selectedWorkout,
+      `http://localhost:9092/health/fitness/123/add-workout?workoutName=${workoutWithDetails.name}&inputReps=${workoutWithDetails.reps}&inputSets=${workoutWithDetails.sets}&inputDuration=${workoutWithDetails.duration}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-        },
+          // 'Authorization': 'Bearer '+sessionStorage.getItem('token')
+        }
       }
     );
   };
 
   const saveFitnessLog = async () => {
     const response = await fetch(
-      "http://localhost:9093/fitness/123/save-fitness",
+      "http://localhost:9092/health/fitness/123/save-workouts",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-        },
+          // 'Authorization': 'Bearer '+sessionStorage.getItem('token')
+        }
       }
     );
     if ((await response.json()) === null) {
@@ -108,7 +110,6 @@ const Fitness = () => {
     } else {
       navigate("/");
     }
-    alert("Fitness log saved!");
   };
 
   return (
