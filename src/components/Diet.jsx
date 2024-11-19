@@ -70,8 +70,9 @@ const Diet = () => {
   };
 
   // Add custom food item
-  const addCustomFood = (customFood) => {
+  const addCustomFood = async (customFood) => {
     setFoodList([...foodList, customFood]);
+    await addEachFood(customFood);
   };
 
   // Calculate totals whenever foodList changes

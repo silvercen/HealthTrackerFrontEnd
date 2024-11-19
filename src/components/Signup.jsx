@@ -134,6 +134,12 @@ const Signup = () => {
               required
             />
           </div>
+          <p
+            className="font-poppins pb-5 text-Quaternary hover:underline cursor-pointer"
+            onClick={() => navigate("/login")}
+          >
+            Already have an account? Login here.
+          </p>
 
           <button
             type="submit"
