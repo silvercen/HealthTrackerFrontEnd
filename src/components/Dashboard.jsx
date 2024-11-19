@@ -60,44 +60,44 @@ const Dashboard = () => {
     }
   };
 
-    useEffect(() => {
-      fetchUserData();
-    }, []);
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
-    // Calculate BMR and calories required
-    const calculateBMR = () => {
-      if (!userInfo) return 0;
-      const { weight, height, age, gender } = userInfo;
-      if (gender === "Male") {
-        return 10 * weight + 6.25 * height - 5 * age + 5;
-      } else {
-        return 10 * weight + 6.25 * height - 5 * age - 161;
-      }
-    };
-
-    const bmr = userInfo ? calculateBMR() : 0;
-
-    const caloriesRequired = userInfo
-      ? (() => {
-          switch (userInfo.journey) {
-            case "Weight Loss":
-              return Math.max(1200, bmr * 0.8); // Ensure a safe calorie floor of 1200
-            case "Weight Gain":
-              return bmr * 1.2;
-            case "Maintenance":
-            default:
-              return bmr;
-          }
-        })()
-      : 0;
-
-    if (loading) {
-      return <div>Loading...</div>;
+  // Calculate BMR and calories required
+  const calculateBMR = () => {
+    if (!userInfo) return 0;
+    const { weight, height, age, gender } = userInfo;
+    if (gender === "Male") {
+      return 10 * weight + 6.25 * height - 5 * age + 5;
+    } else {
+      return 10 * weight + 6.25 * height - 5 * age - 161;
     }
+  };
 
-    if (error) {
-      return <div>Error: {error}</div>;
-    }
+  const bmr = userInfo ? calculateBMR() : 0;
+
+  const caloriesRequired = userInfo
+    ? (() => {
+        switch (userInfo.journey) {
+          case "Weight Loss":
+            return Math.max(1200, bmr * 0.8); // Ensure a safe calorie floor of 1200
+          case "Weight Gain":
+            return bmr * 1.2;
+          case "Maintenance":
+          default:
+            return bmr;
+        }
+      })()
+    : 0;
+
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
+
+  // if (error) {
+  //   return <div>Error: {error}</div>;
+  // }
 
   const fitnessData = {
     totalWorkouts: 20,
@@ -319,6 +319,35 @@ const Dashboard = () => {
   //       return bmr;
   //   }
   // })();
+
+  // Check if user details are incomplete
+  const isUserDetailsComplete =
+    userInfo &&
+    userInfo.weight &&
+    userInfo.height &&
+    userInfo.age &&
+    userInfo.gender &&
+    userInfo.journey;
+
+  if (!isUserDetailsComplete) {
+    return (
+      <div className="min-h-screen font-poppins p-8 text-center">
+        <h1 className="text-3xl text-Quaternary font-bold mb-4">
+          Complete Your Profile
+        </h1>
+        <p className="text-Secondary text-lg">
+          Please update your account details in the{" "}
+          <a
+            href="/account"
+            className="text-Quaternary font-medium underline hover:text-primary"
+          >
+            Account Page
+          </a>{" "}
+          to access your dashboard.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen font-poppins p-8">
