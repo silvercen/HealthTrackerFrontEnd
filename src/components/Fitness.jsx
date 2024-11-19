@@ -69,8 +69,9 @@ const Fitness = () => {
   };
 
   // Add a custom workout
-  const addCustomWorkout = (customWorkout) => {
+  const addCustomWorkout = async (customWorkout) => {
     setWorkoutList([...workoutList, customWorkout]);
+    await addEachWorkout(customWorkout);
   };
 
   // Calculate total calories whenever workoutList changes
