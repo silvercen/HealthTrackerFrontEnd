@@ -60,6 +60,7 @@ const Fitness = () => {
     };
 
     setWorkoutList([...workoutList, workoutWithDetails]);
+    console.log(sessionStorage.getItem('token'))
     await addEachWorkout(workoutWithDetails);
     setSelectedWorkout("");
     setSets("");
@@ -82,8 +83,7 @@ const Fitness = () => {
   }, [workoutList]);
 
   const addEachWorkout = async (workoutWithDetails) => {
-    await fetch(
-      `http://localhost:9088/health/fitness/${sessionStorage.getItem('userId')}/add-workout?workoutName=${workoutWithDetails.name}&inputReps=${workoutWithDetails.reps}&inputSets=${workoutWithDetails.sets}&inputDuration=${workoutWithDetails.duration}`,
+    await fetch(`http://localhost:9088/health/fitness/${sessionStorage.getItem('userId')}/add-workout?workoutName=${workoutWithDetails.name}&inputReps=${workoutWithDetails.reps}&inputSets=${workoutWithDetails.sets}&inputDuration=${workoutWithDetails.duration}`,
       {
         method: "POST",
         headers: {
