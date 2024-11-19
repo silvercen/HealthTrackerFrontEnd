@@ -1,52 +1,168 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom"; // For navigation after logout
 
 const AccountPage = () => {
   const [activeTab, setActiveTab] = useState("accountInfo");
+  const navigate = useNavigate(); // For navigation after logout
 
   // State variables for form inputs
-  const [name, setName] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState(""); // Email fetched automatically
   const [age, setAge] = useState("");
+  const [gender, setGender] = useState("");
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [journey, setJourney] = useState("Maintainance");
+  const { logout } = useAuth();
+  let user = {}
 
-  // Function to simulate fetching logged-in user email
   useEffect(() => {
-    const loggedInEmail = "user@example.com"; // Simulated email
-    setEmail(loggedInEmail);
+    const collectDetails = async () => {
+    await collectUser();
+    }
+    collectDetails();
   }, []);
 
-  // Navigate hook
-  const navigate = useNavigate();
+  async function collectUser()
+  {
+    try
+    {
+      await fetch("http://localhost:9088/user/"+sessionStorage.getItem('userId')+"/get-details", {
+        method: "GET",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${sessionStorage.getItem('token')}`,
+        }
+      })
+     .then((response) => response.json())
+     .then((data) => {
+        if(data.userName !== null)
+        {
+          user = data;
+          setUserName(user.userName);
+          setEmail(user.email);
+          setAge(user.age);
+          setGender(user.gender);
+          setWeight(user.weight);
+          setHeight(user.height);
+          setJourney(user.journey);
+        }
+        else
+        {
+          setEmail(data.email);
+        }
+      })
+     .catch((error) => {
+        console.error("Error occurred while fetching email:", error.message);
+        navigate('/bad-request');
+      });
+    }
+    catch (error)
+    {
+      console.error("Error occurred while fetching email:", error.message);
+      navigate('/bad-request');
+    }
+  }
+
+  async function sendUser(user)
+  {
+    try
+    {
+      await fetch("http://localhost:9088/user/"+sessionStorage.getItem('userId'), {
+        method: "PUT",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${sessionStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(user)
+      })
+     .then((response) => response.text())
+     .then((data) => {
+        if(data !== "User updated successfully")
+        {
+          navigate('/bad-request');
+        }
+      })
+     .catch((error) => {
+        console.error("Error occurred while updating user:", error.message);
+        navigate('/bad-request');
+      });
+    }
+    catch (error)
+    {
+      console.error("Error occurred while updating user:", error.message);
+      navigate('/bad-request');
+    }
+  }
 
   // Handle form submit for account info update
-  const handleAccountUpdateSubmit = (e) => {
+  const handleAccountUpdateSubmit = async (e) => {
     e.preventDefault();
     console.log({
-      name,
-      email,
+      userName,
       age,
+      gender,
       weight,
       height,
       journey,
     });
+    user.userName = userName;
+    user.age = age;
+    user.weight = weight;
+    user.height = height;
+    user.journey = journey;
+    user.gender = gender;
+
+    await sendUser(user)
     alert("Account Updated Successfully");
 
     // Switch back to account info tab after update
     setActiveTab("accountInfo");
   };
 
+  async function deleteUser()
+  {
+    try
+    {
+      await fetch("http://localhost:9088/user/"+sessionStorage.getItem('userId'), {
+        method: "DELETE",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${sessionStorage.getItem('token')}`,
+        }
+      })
+     .then((response) => response.text())
+     .then((data) => {
+        if(data!== "User deleted successfully")
+        {
+          navigate('/bad-request');
+        }
+      })
+     .catch((error) => {
+        console.error("Error occurred while deleting user:", error.message);
+        navigate('/bad-request');
+      });
+    }
+    catch (error)
+    {
+      console.error("Error occurred while deleting user:", error.message);
+      navigate('/bad-request');
+    }
+  }
+
   // Handle form submit for deleting account
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     if (
       window.confirm(
         "Are you sure you want to delete your account? This action cannot be undone."
       )
     ) {
+      await deleteUser();
       console.log("Account Deleted");
       alert("Account Deleted Successfully");
+      logout();
+      navigate('/')
     }
   };
 
@@ -54,7 +170,8 @@ const AccountPage = () => {
   const handleLogout = () => {
     // Add your logout logic here (e.g., clearing tokens, state, etc.)
     alert("Logged Out Successfully");
-
+    sessionStorage.clear();
+    logout();
     // Redirect to the home page after logout
     navigate("/login"); // Redirect to login page
   };
@@ -73,7 +190,8 @@ const AccountPage = () => {
                 Account Information
               </h2>
               <p className="text-lg text-Secondary">Email: {email}</p>
-              <p className="text-lg text-Secondary">Name: {name}</p>
+              <p className="text-lg text-Secondary">Name: {userName}</p>
+              <p className="text-lg text-Secondary">Gender: {gender}</p>
               <p className="text-lg text-Secondary">Age: {age}</p>
               <p className="text-lg text-Secondary">Weight: {weight} kg</p>
               <p className="text-lg text-Secondary">Height: {height} cm</p>
@@ -116,10 +234,24 @@ const AccountPage = () => {
                   </label>
                   <input
                     type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                     placeholder="Enter your name"
+                    required
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-lg font-medium text-Secondary">
+                    Gender
+                  </label>
+                  <input
+                    type="text"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    placeholder="Enter your gender"
                     required
                   />
                 </div>
