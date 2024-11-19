@@ -57,19 +57,36 @@ const PageTransition = () => {
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -50 },
   };
+   const flipVariants = {
+     initial: { rotateY: 180, opacity: 0, scale: 0.95 },
+     animate: { rotateY: 0, opacity: 1, scale: 1 },
+     exit: { rotateY: -180, opacity: 0, scale: 0.95 },
+   };
 
-  const transitionConfig = {
-    duration: 0.5,
-    ease: "easeInOut",
-  };
+   const fadeVariants = {
+     initial: { opacity: 0, y: 50 },
+     animate: { opacity: 1, y: 0 },
+     exit: { opacity: 0, y: -50 },
+   };
+
+   // Smoother easing and duration
+   const transitionConfig = {
+     duration: 0.8, // A bit longer for smoothness
+     ease: [0.25, 0.45, 0.45, 0.95], // Custom easing for smoother feel (easeInOut)
+   };
 
   return (
     <motion.div
-      key={location.pathname} // Trigger animation when the route changes
+      key={location.pathname}
       initial="initial"
       animate="animate"
       exit="exit"
-      variants={pageVariants}
+      variants={
+        // Apply flip animation only to Login and Signup routes
+        location.pathname === "/login" || location.pathname === "/signup"
+          ? flipVariants
+          : fadeVariants
+      }
       transition={transitionConfig}
     >
       <Routes location={location}>
