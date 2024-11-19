@@ -14,7 +14,7 @@ const AccountPage = () => {
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [journey, setJourney] = useState("Maintainance");
-  const { logout } = useAuth();
+  const { logout, isLoggedIn } = useAuth();
   let user = {}
 
   useEffect(() => {
@@ -22,12 +22,13 @@ const AccountPage = () => {
     await collectUser();
     }
     collectDetails();
-  }, []);
+  }, [isLoggedIn]);
 
   async function collectUser()
   {
     try
     {
+      console.log(isLoggedIn)
       await fetch("http://localhost:9088/user/"+sessionStorage.getItem('userId')+"/get-details", {
         method: "GET",
         headers: { 

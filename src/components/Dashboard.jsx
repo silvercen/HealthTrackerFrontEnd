@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Bar, Line, Pie } from "react-chartjs-2";
 import IconGym from "../assets/IconGym";
 import IconFoodOutline from "../assets/IconFoodOutline";
@@ -17,6 +18,7 @@ import {
   Filler,
   ArcElement,
 } from "chart.js";
+import { useAuth } from "./AuthContext";
 
 ChartJS.register(
   CategoryScale,
@@ -35,6 +37,7 @@ const Dashboard = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const {isLoggedIn} = useAuth();
 
   // Fetch user data from userService
   const fetchUserData = async () => {
@@ -46,7 +49,14 @@ const Dashboard = () => {
     }
 
     try {
-      const response = await fetch(`/api/userservice/${userId}`);
+      const response = await fetch(`http://localhost:9088/user/${sessionStorage.getItem('userId')}/get-details`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    });
       if (!response.ok) {
         throw new Error("Failed to fetch user data.");
       }
@@ -62,7 +72,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [isLoggedIn]);
 
   // Calculate BMR and calories required
   const calculateBMR = () => {
@@ -337,12 +347,12 @@ const Dashboard = () => {
         </h1>
         <p className="text-Secondary text-lg">
           Please update your account details in the{" "}
-          <a
-            href="/account"
+          <Link
+            to="/account"
             className="text-Quaternary font-medium underline hover:text-primary"
           >
             Account Page
-          </a>{" "}
+          </Link>{" "}
           to access your dashboard.
         </p>
       </div>
