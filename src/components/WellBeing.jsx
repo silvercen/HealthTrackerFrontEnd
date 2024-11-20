@@ -1,3 +1,4 @@
+import { sub } from "framer-motion/client";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -56,14 +57,13 @@ const WellBeing = () => {
       setSleepHours("");
       setMood("");
       setSubmitted(true);
+      console.log(submitted)
     }
   };
 
   async function sendWellbeing() {
     const response = await fetch(
-      `http://localhost:9088/wellbeing?userId=${sessionStorage.getItem(
-        "userId"
-      )}`,
+      `http://localhost:9088/wellbeing?userId=${sessionStorage.getItem("userId")}`,
       {
         method: "POST",
         headers: {
