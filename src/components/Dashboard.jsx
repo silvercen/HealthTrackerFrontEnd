@@ -149,6 +149,10 @@ useEffect(() => {
   fetchData();
 }, [isLoggedIn]);
 
+console.log("Fitness Data:", fitnessData);
+console.log("Diet Data:", dietData);
+console.log("Wellbeing Data:", wellbeingData);
+
 
   // Render logic
   // if (loading) return <div>Loading...</div>;
