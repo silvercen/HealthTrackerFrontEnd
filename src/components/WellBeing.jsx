@@ -2,56 +2,98 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router";
 
 const WellBeing = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [sleepHours, setSleepHours] = useState("");
   const [mood, setMood] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [suggestion, setSuggestion] = useState(""); // New state for suggestion
+
   const wellbeing = {
     sleepTime: sleepHours,
-    mood: mood
-  }
+    mood: mood,
+  };
+
+  const suggestions = {
+    Happy: {
+      lowSleep:
+        "Feeling happy with little sleep? Enjoy it, but aim for a regular sleep schedule!",
+      goodSleep: "Great to hear you're happy and well-rested!",
+    },
+    Sad: {
+      lowSleep:
+        "Low sleep can worsen sadness. Prioritize a good night's sleep tonight.",
+      goodSleep:
+        "Feeling sad even with good sleep? Consider talking to a therapist or counselor.",
+    },
+    Neutral: {
+      lowSleep:
+        "Feeling neutral with low sleep might impact your mood later. Aim for better sleep!",
+      goodSleep:
+        "Neutral mood with good sleep is a good sign! Consider activities to boost your mood further.",
+    },
+    Stressed: {
+      lowSleep:
+        "Stress and low sleep can be a vicious cycle. Try relaxation techniques before bed.",
+      goodSleep:
+        "Getting good sleep despite stress is great! Consider stress management techniques.",
+    },
+    Relaxed: {
+      lowSleep:
+        "Feeling relaxed despite low sleep might be temporary. Aim for a regular sleep schedule.",
+      goodSleep: "Relaxed and well-rested sounds like a perfect combination!",
+    },
+  };
 
   const handleSubmit = async () => {
-    if ( await sendWellbeing() === true) {
-      setSleepHours("")
-      setMood("")
+    const lowSleepThreshold = 6; // Define threshold for "low sleep"
+    const sleepStatus =
+      sleepHours < lowSleepThreshold ? "lowSleep" : "goodSleep";
+
+    if (await sendWellbeing()) {
+      setSuggestion(
+        suggestions[mood]?.[sleepStatus] || "Keep taking care of yourself!"
+      );
+      setSleepHours("");
+      setMood("");
       setSubmitted(true);
     }
   };
 
-  async function sendWellbeing()
-  {
-    const response = await fetch('http://localhost:9088/wellbeing?userId='+sessionStorage.getItem('userId'),
+  async function sendWellbeing() {
+    const response = await fetch(
+      `http://localhost:9088/wellbeing?userId=${sessionStorage.getItem(
+        "userId"
+      )}`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": sessionStorage.getItem('token')
+          Authorization: sessionStorage.getItem("token"),
         },
-        body: JSON.stringify(wellbeing)
-      })
-    
-    const responseText = await response.text()
+        body: JSON.stringify(wellbeing),
+      }
+    );
 
-    if (responseText === 'Wellbeing Saved' || responseText === 'Wellbeing Updated')
-    {
+    const responseText = await response.text();
+
+    if (
+      responseText === "Wellbeing Saved" ||
+      responseText === "Wellbeing Updated"
+    ) {
       return true;
-    }
-    else
-    {
+    } else {
       return false;
     }
   }
 
-
-  
   return (
     <div className="min-h-screen py-10 flex">
       {/* Left side: Content about Mental Health and Sleep */}
       <div className="flex-1 p-10 bg-LightGrey text-Secondary">
         <h2 className="text-4xl font-bold mb-4 italic text-Secondary">
-          "A good laugh and a long <span className="text-Quaternary underline">sleep</span> are the best cures in the
-          doctor’s book."
+          "A good laugh and a long{" "}
+          <span className="text-Quaternary underline">sleep</span> are the best
+          cures in the doctor’s book."
         </h2>
         <h2 className="text-4xl font-bold mb-4 italic text-Secondary">
           -Thomas Dekker
@@ -139,6 +181,9 @@ const WellBeing = () => {
               You are feeling{" "}
               <span className="font-semibold text-Quaternary">{mood}</span>{" "}
               today.
+            </p>
+            <p className="text-lg text-Quaternary font-bold mt-4">
+              {suggestion}
             </p>
           </div>
         )}
