@@ -79,12 +79,6 @@ const Signup = () => {
       {
         if(await setUserId() === true)
         {
-          console.log("Signup successful and logged in");
-          login()
-          navigate(`/dashboard`)
-        }
-        else
-        {
           console.log("Signup successful");
           navigate(`/login`)
         }
@@ -140,6 +134,12 @@ const Signup = () => {
               required
             />
           </div>
+          <p
+            className="font-poppins pb-5 text-Quaternary hover:underline cursor-pointer"
+            onClick={() => navigate("/login")}
+          >
+            Already have an account? Login here.
+          </p>
 
           <button
             type="submit"

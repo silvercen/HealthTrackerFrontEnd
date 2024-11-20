@@ -23,7 +23,10 @@ const Login = () => {
       })
         .then((response) => response.text())
         .then((token) => {
-          Token = token;
+          if(token === "User not authenticated") {
+            setError("Invalid email or password");
+            return false;
+          }
           sessionStorage.setItem("token", token);
         });
       return true;
@@ -43,6 +46,7 @@ const Login = () => {
         .then((response) => response.text())
         .then((userId) => {
           sessionStorage.setItem("userId", userId);
+          console.log(sessionStorage.getItem('userId'))
         });
       return true;
     } catch (error) {
@@ -56,7 +60,7 @@ const Login = () => {
     e.preventDefault();
     if ((await logIn()) === true) {
       if ((await setUserId()) === true) {
-        login();
+        await login();
         console.log(isLoggedIn);
         navigate("/dashboard");
       }
