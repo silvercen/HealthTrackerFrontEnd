@@ -78,7 +78,8 @@ const Diet = () => {
     );
   };
 
-  const addEachCustomFood = async (foodWithDetails) => {
+  const addEachCustomFood = async (customFood) => {
+    console.log(customFood);
     await fetch(
       `http://localhost:9088/diet/${sessionStorage.getItem("userId")}/add-custom-food`,
       {
@@ -87,7 +88,7 @@ const Diet = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
-        body: JSON.stringify(foodWithDetails)
+        body: JSON.stringify(customFood)
       }
     );
   };
@@ -95,7 +96,15 @@ const Diet = () => {
   // Add custom food item
   const addCustomFood = async (customFood) => {
     setFoodList([...foodList, customFood]);
-    await addEachCustomFood(customFood);
+    const newFood = {
+      foodName: customFood.name,
+      foodProtein: customFood.protein,
+      foodFat: customFood.fat,
+      foodGrams: customFood.grams,
+      avgCalories: customFood.calories,
+    }
+    console.log(newFood)
+    await addEachCustomFood(newFood);
   };
 
   // Calculate totals whenever foodList changes
