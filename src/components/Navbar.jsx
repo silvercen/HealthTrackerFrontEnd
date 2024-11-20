@@ -6,6 +6,7 @@ import { useAuth } from "./AuthContext";
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [logcheck, setLogcheck] = useState("");
   const [content, setContent] = useState();
   const { isLoggedIn } = useAuth();
 
@@ -24,8 +25,8 @@ const Navbar = () => {
   // }
 
   useEffect(() => {
-    console.log(sessionStorage.getItem('isLoggedIn'))
-    if (sessionStorage.getItem('isLoggedIn') === "true") {
+    setLogcheck(sessionStorage.getItem('isLoggedIn'))
+    if (logcheck === "true") {
       setContent(
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +54,7 @@ const Navbar = () => {
         // </div>
       );
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, logcheck]);
 
   const navLinks = [
     { name: "Dashboard", path: "/dashboard" },
@@ -88,7 +89,8 @@ const Navbar = () => {
           </div>
 
           {/* Centered Navigation Links with White Rounded Border */}
-          <div
+          { logcheck === "true" ?
+          (<div
             className="flex items-center justify-center flex-grow "
             style={{ marginLeft: "3em" }}
           >
@@ -104,6 +106,7 @@ const Navbar = () => {
               ))}
             </div>
           </div>
+          ):(<></>)}
 
           {/* Profile Section on the Right */}
           <div className="relative ml-auto">{content}</div>
