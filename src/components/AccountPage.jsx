@@ -160,9 +160,10 @@ const AccountPage = () => {
       )
     ) {
       await deleteUser();
+      logout();
+      sessionStorage.clear()
       console.log("Account Deleted");
       alert("Account Deleted Successfully");
-      logout();
       navigate('/')
     }
   };
@@ -170,9 +171,9 @@ const AccountPage = () => {
   // Handle user logout
   const handleLogout = () => {
     // Add your logout logic here (e.g., clearing tokens, state, etc.)
-    alert("Logged Out Successfully");
     sessionStorage.clear();
     logout();
+    alert("Logged Out Successfully");
     // Redirect to the home page after logout
     navigate("/login"); // Redirect to login page
   };
