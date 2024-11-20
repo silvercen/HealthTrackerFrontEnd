@@ -42,6 +42,9 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { isLoggedIn } = useAuth();
+  const [mockFitnessData, setMockFitnessData] = useState([]);
+  const [mockDietData, setMockDietData] = useState([]);
+  const [mockSleepData, setMockSleepData] = useState([]);
 
   // Fetch user data from userService
   const fetchUserData = async () => {
@@ -180,6 +183,85 @@ const Dashboard = () => {
       })()
     : 0;
 
+    useEffect(() => {
+      // Mock weekly data for graphs
+      const mockFitness = [
+        { day: "Mon", caloriesBurned: 300 },
+        { day: "Tue", caloriesBurned: 450 },
+        { day: "Wed", caloriesBurned: 200 },
+        { day: "Thu", caloriesBurned: 400 },
+        { day: "Fri", caloriesBurned: 500 },
+        { day: "Sat", caloriesBurned: 350 },
+        { day: "Sun", caloriesBurned: 300 },
+      ];
+
+      const mockDiet = [
+        { day: "Mon", caloriesConsumed: 2000 },
+        { day: "Tue", caloriesConsumed: 1900 },
+        { day: "Wed", caloriesConsumed: 1800 },
+        { day: "Thu", caloriesConsumed: 2100 },
+        { day: "Fri", caloriesConsumed: 2200 },
+        { day: "Sat", caloriesConsumed: 2300 },
+        { day: "Sun", caloriesConsumed: 2000 },
+      ];
+
+      const mockSleep = [
+        { day: "Mon", sleepHours: 7 },
+        { day: "Tue", sleepHours: 6 },
+        { day: "Wed", sleepHours: 8 },
+        { day: "Thu", sleepHours: 5 },
+        { day: "Fri", sleepHours: 6 },
+        { day: "Sat", sleepHours: 9 },
+        { day: "Sun", sleepHours: 8 },
+      ];
+
+      setMockFitnessData(mockFitness);
+      setMockDietData(mockDiet);
+      setMockSleepData(mockSleep);
+    }, [isLoggedIn]);
+
+    // Prepare data for charts
+    const fitnessChartData = {
+      labels: mockFitnessData.map((data) => data.day),
+      datasets: [
+        {
+          label: "Calories Burned",
+          data: mockFitnessData.map((data) => data.caloriesBurned),
+          backgroundColor: "rgba(75, 192, 192, 0.6)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1,
+        },
+      ],
+    };
+
+    const dietChartData = {
+      labels: mockDietData.map((data) => data.day),
+      datasets: [
+        {
+          label: "Calories Consumed",
+          data: mockDietData.map((data) => data.caloriesConsumed),
+          backgroundColor: "rgba(255, 99, 132, 0.6)",
+          borderColor: "rgba(255, 99, 132, 1)",
+          borderWidth: 1,
+        },
+      ],
+    };
+
+    const sleepChartData = {
+      labels: mockSleepData.map((data) => data.day),
+      datasets: [
+        {
+          label: "Sleep Hours",
+          data: mockSleepData.map((data) => data.sleepHours),
+          backgroundColor: "rgba(54, 162, 235, 0.6)",
+          borderColor: "rgba(54, 162, 235, 1)",
+          borderWidth: 1,
+        },
+      ],
+    };
+
+
+
   // Check if user details are incomplete
   const isUserDetailsComplete =
     userInfo &&
@@ -291,11 +373,15 @@ const Dashboard = () => {
                 </li>
               ))}
               <li className="font-bold text-2xl">
-                Total Calories Burned: {fitnessData.totalCaloriesBurned} kcal
+                Total Calories Burned:{" "}
+                <span className="text-Quaternary">
+                  {fitnessData.totalCaloriesBurned}
+                </span>{" "}
+                kcal
               </li>
             </ul>
           ) : (
-            <p>No workouts logged today.</p>
+            <p className="text-Secondary">No workouts logged today.</p>
           )}
         </div>
 
@@ -321,17 +407,21 @@ const Dashboard = () => {
                     <strong>Fats:</strong> {food.foodFat}gm
                   </p>
                   <p>
-                    <strong>Avg Calories(100gm):</strong> {food.avgCalories}{" "}
+                    <strong>Calories Consumed:</strong> {food.avgCalories}
                     kcal
                   </p>
                 </li>
               ))}
               <li className="font-bold text-2xl">
-                Total Calories Consumed: {dietData.totalCaloriesConsumed} kcal
+                Total Calories Consumed:{" "}
+                <span className="text-Quaternary">
+                  {dietData.totalCaloriesConsumed}{" "}
+                </span>
+                kcal
               </li>
             </ul>
           ) : (
-            <p>No meals logged today.</p>
+            <p className="text-Secondary">No meals logged today.</p>
           )}
         </div>
 
@@ -347,6 +437,118 @@ const Dashboard = () => {
             <strong>Sleep Time:</strong>{" "}
             {wellbeingData?.sleepTime || "Not logged"} hrs
           </p>
+        </div>
+      </div>
+      {/* Calorie Balance Section */}
+      <div className="bg-White bg-Grey bg-opacity-40 backdrop-blur-lg border-2 border-Quaternary p-4 rounded-lg shadow-md mt-4">
+        <h3 className="text-4xl font-semibold text-Quaternary mb-2">
+          Calorie Balance
+        </h3>
+        {dietData && fitnessData ? (
+          <div className="text-Secondary">
+            <p>
+              <strong>Total Calories Consumed:</strong>{" "}
+              <span className="text-Quaternary">
+                {dietData.totalCaloriesConsumed}
+              </span>{" "}
+              kcal
+            </p>
+            <p>
+              <strong>Total Calories Burned:</strong>{" "}
+              <span className="text-Quaternary">
+                {fitnessData.totalCaloriesBurned}
+              </span>{" "}
+              kcal
+            </p>
+            <p>
+              <strong>Net Calories:</strong>{" "}
+              <span className="text-Quaternary">
+                {dietData.totalCaloriesConsumed -
+                  fitnessData.totalCaloriesBurned}
+              </span>{" "}
+              kcal
+            </p>
+            <p>
+              <strong>Maintenance Calories:</strong>{" "}
+              <span className="text-Quaternary">
+                {caloriesRequired.toFixed(1)}
+              </span>{" "}
+              kcal
+            </p>
+            <p className="mt-4">
+              <strong>Result:</strong>{" "}
+              {(() => {
+                const netCalories =
+                  dietData.totalCaloriesConsumed -
+                  fitnessData.totalCaloriesBurned;
+                if (netCalories > caloriesRequired) {
+                  return (
+                    <span className="text-Quaternary font-bold">
+                      You are in a calorie surplus.{" "}
+                      {userInfo.journey === "Weight Loss"
+                        ? "This may hinder weight loss."
+                        : userInfo.journey === "Weight Gain"
+                        ? "Great for gaining weight!"
+                        : "You may gain weight."}
+                    </span>
+                  );
+                } else if (netCalories < caloriesRequired) {
+                  return (
+                    <span className="text-Quaternary font-bold">
+                      You are in a calorie deficit.{" "}
+                      {userInfo.journey === "Weight Loss"
+                        ? "This is ideal for weight loss!"
+                        : userInfo.journey === "Weight Gain"
+                        ? "This may hinder weight gain."
+                        : "You may lose weight."}
+                    </span>
+                  );
+                } else {
+                  return (
+                    <span className="text-Quaternary font-bold">
+                      You are meeting your maintenance calories.{" "}
+                      {userInfo.journey === "Weight Loss"
+                        ? "Consider reducing your calories for weight loss."
+                        : userInfo.journey === "Weight Gain"
+                        ? "Consider increasing your calories for weight gain."
+                        : "You are maintaining your weight."}
+                    </span>
+                  );
+                }
+              })()}
+            </p>
+          </div>
+        ) : (
+          <p className="text-Secondary">Calorie data is not available.</p>
+        )}
+      </div>
+      <h1 className="text-3xl underline font-semibold mt-6 text-center text-Quaternary mb-8">
+        Dashboard - Weekly Reports
+      </h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Fitness Chart */}
+        <div className="bg-White bg-Grey bg-opacity-40 backdrop-blur-lg  p-4 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-Quaternary mb-4">
+            Weekly Fitness Report
+          </h2>
+          <Bar data={fitnessChartData} options={{ responsive: true }} />
+        </div>
+
+        {/* Diet Chart */}
+        <div className="bg-White bg-Grey bg-opacity-40 backdrop-blur-lg  p-4 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-Quaternary mb-4">
+            Weekly Diet Report
+          </h2>
+          <Line data={dietChartData} options={{ responsive: true }} />
+        </div>
+
+        {/* Sleep Chart */}
+        <div className="bg-White bg-Grey bg-opacity-40 backdrop-blur-lg  p-4 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold text-Quaternary mb-4">
+            Weekly Sleep Report
+          </h2>
+          <Bar data={sleepChartData} options={{ responsive: true }} />
         </div>
       </div>
     </div>
