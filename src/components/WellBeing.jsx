@@ -50,7 +50,10 @@ const WellBeing = () => {
     const sleepStatus =
       sleepHours < lowSleepThreshold ? "lowSleep" : "goodSleep";
 
-    if (await sendWellbeing()) {
+    let result = await sendWellbeing();
+    console.log(result)
+    if (result) {
+      console.log("inside if result");
       setSuggestion(
         suggestions[mood]?.[sleepStatus] || "Keep taking care of yourself!"
       );
@@ -77,11 +80,13 @@ const WellBeing = () => {
     const responseText = await response.text();
 
     if (
-      responseText === "Wellbeing Saved" ||
-      responseText === "Wellbeing Updated"
+      responseText === "Wellbeing saved" ||
+      responseText === "Wellbeing updated"
     ) {
+      console.log("response true: ", responseText);
       return true;
     } else {
+      console.log("response false: ", responseText);
       return false;
     }
   }
