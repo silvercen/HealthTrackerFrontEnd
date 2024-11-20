@@ -84,21 +84,21 @@ const fetchData = async () => {
     setLoading(true);
 
     const [fitnessRes, dietRes, wellbeingRes] = await Promise.all([
-      fetch(`https://localhost:9088/health/fitness/${userId}/get-workout`, {
+      fetch(`http://localhost:9088/health/fitness/${userId}/get-workout`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
       }),
-      fetch(`https://localhost:9088/diet/${userId}/get-diet`, {
+      fetch(`http://localhost:9088/diet/${userId}/get-diet`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
       }),
-      fetch(`https://localhost:9088/wellbeing/${userId}`, {
+      fetch(`http://localhost:9088/wellbeing/${userId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -229,146 +229,146 @@ const fetchData = async () => {
   // };
 
   // Utility to format the date (YYYY-MM-DD)
-  const formatDate = (date) => date.toISOString().split("T")[0];
+  // const formatDate = (date) => date.toISOString().split("T")[0];
 
-  // Today's date
-  const todayDate = formatDate(new Date());
+  // // Today's date
+  // const todayDate = formatDate(new Date());
 
-  // Mock data for daily activity
-  const dailyLogs = [
-    {
-      date: "2024-11-18", // Update to match today's date
-      workout: "Running - 30 mins",
-      food: "Breakfast - 500 kcal, Lunch - 800 kcal, Dinner - 700 kcal",
-      mood: "Excellent",
-    },
-    {
-      date: "2024-11-17",
-      workout: "Cycling - 45 mins",
-      food: "Snacks - 200 kcal",
-      mood: "Good",
-    },
-    {
-      date: "2024-11-16",
-      workout: "Yoga - 60 mins",
-      food: "Dinner - 700 kcal",
-      mood: "Fair",
-    },
-  ];
+  // // Mock data for daily activity
+  // const dailyLogs = [
+  //   {
+  //     date: "2024-11-18", // Update to match today's date
+  //     workout: "Running - 30 mins",
+  //     food: "Breakfast - 500 kcal, Lunch - 800 kcal, Dinner - 700 kcal",
+  //     mood: "Excellent",
+  //   },
+  //   {
+  //     date: "2024-11-17",
+  //     workout: "Cycling - 45 mins",
+  //     food: "Snacks - 200 kcal",
+  //     mood: "Good",
+  //   },
+  //   {
+  //     date: "2024-11-16",
+  //     workout: "Yoga - 60 mins",
+  //     food: "Dinner - 700 kcal",
+  //     mood: "Fair",
+  //   },
+  // ];
 
-  // Find today's log
-  // const todaysLog = dailyLogs.find((log) => log.date === todayDate);
+  // // Find today's log
+  // // const todaysLog = dailyLogs.find((log) => log.date === todayDate);
 
-  const maintenanceCalories = 1800;
+  // const maintenanceCalories = 1800;
 
-  const weeklyAverageCaloriesConsumed = (
-    dietData.dailyCalories.reduce((a, b) => a + b, 0) /
-    dietData.dailyCalories.length
-  ).toFixed(1);
-  const weeklyAverageCaloriesBurned = (
-    fitnessData.workoutHistory.reduce((a, b) => a + b, 0) /
-    fitnessData.workoutHistory.length
-  ).toFixed(1);
-  const weeklyAverageSleep = (
-    wellbeingData.weeklySleep.reduce((a, b) => a + b, 0) /
-    wellbeingData.weeklySleep.length
-  ).toFixed(1);
+  // const weeklyAverageCaloriesConsumed = (
+  //   dietData.dailyCalories.reduce((a, b) => a + b, 0) /
+  //   dietData.dailyCalories.length
+  // ).toFixed(1);
+  // const weeklyAverageCaloriesBurned = (
+  //   fitnessData.workoutHistory.reduce((a, b) => a + b, 0) /
+  //   fitnessData.workoutHistory.length
+  // ).toFixed(1);
+  // const weeklyAverageSleep = (
+  //   wellbeingData.weeklySleep.reduce((a, b) => a + b, 0) /
+  //   wellbeingData.weeklySleep.length
+  // ).toFixed(1);
 
-  const fitnessChartData = {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    datasets: [
-      {
-        label: "Calories Burned",
-        data: fitnessData.workoutHistory,
-        fill: true,
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        tension: 0.4,
-      },
-    ],
-  };
+  // const fitnessChartData = {
+  //   labels: [
+  //     "Jan",
+  //     "Feb",
+  //     "Mar",
+  //     "Apr",
+  //     "May",
+  //     "Jun",
+  //     "Jul",
+  //     "Aug",
+  //     "Sep",
+  //     "Oct",
+  //     "Nov",
+  //     "Dec",
+  //   ],
+  //   datasets: [
+  //     {
+  //       label: "Calories Burned",
+  //       data: fitnessData.workoutHistory,
+  //       fill: true,
+  //       backgroundColor: "rgba(75, 192, 192, 0.2)",
+  //       borderColor: "rgba(75, 192, 192, 1)",
+  //       tension: 0.4,
+  //     },
+  //   ],
+  // };
 
-  const dietChartData = {
-    labels: [
-      "Day 1",
-      "Day 2",
-      "Day 3",
-      "Day 4",
-      "Day 5",
-      "Day 6",
-      "Day 7",
-      "Day 8",
-    ],
-    datasets: [
-      {
-        label: "Calories Consumed",
-        data: dietData.dailyCalories,
-        backgroundColor: "rgba(153, 102, 255, 0.6)",
-        borderColor: "rgba(153, 102, 255, 1)",
-        borderWidth: 1,
-      },
-    ],
-  };
+  // const dietChartData = {
+  //   labels: [
+  //     "Day 1",
+  //     "Day 2",
+  //     "Day 3",
+  //     "Day 4",
+  //     "Day 5",
+  //     "Day 6",
+  //     "Day 7",
+  //     "Day 8",
+  //   ],
+  //   datasets: [
+  //     {
+  //       label: "Calories Consumed",
+  //       data: dietData.dailyCalories,
+  //       backgroundColor: "rgba(153, 102, 255, 0.6)",
+  //       borderColor: "rgba(153, 102, 255, 1)",
+  //       borderWidth: 1,
+  //     },
+  //   ],
+  // };
 
-  const wellbeingChartData = {
-    labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    datasets: [
-      {
-        label: "Hours of Sleep",
-        data: wellbeingData.weeklySleep,
-        fill: true,
-        backgroundColor: "rgba(255, 159, 64, 0.2)",
-        borderColor: "rgba(255, 159, 64, 1)",
-        tension: 0.4,
-      },
-    ],
-  };
+  // const wellbeingChartData = {
+  //   labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  //   datasets: [
+  //     {
+  //       label: "Hours of Sleep",
+  //       data: wellbeingData.weeklySleep,
+  //       fill: true,
+  //       backgroundColor: "rgba(255, 159, 64, 0.2)",
+  //       borderColor: "rgba(255, 159, 64, 1)",
+  //       tension: 0.4,
+  //     },
+  //   ],
+  // };
 
-  const fitnessPieChartData = {
-    labels: fitnessData.workoutTypes,
-    datasets: [
-      {
-        data: fitnessData.workoutCalories,
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-      },
-    ],
-  };
+  // const fitnessPieChartData = {
+  //   labels: fitnessData.workoutTypes,
+  //   datasets: [
+  //     {
+  //       data: fitnessData.workoutCalories,
+  //       backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+  //       hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+  //     },
+  //   ],
+  // };
 
-  const dietPieChartData = {
-    labels: dietData.mealLabels,
-    datasets: [
-      {
-        data: dietData.mealCalories,
-        backgroundColor: ["#FF9F40", "#36A2EB", "#4BC0C0", "#FFCD56"],
-        hoverBackgroundColor: ["#FF9F40", "#36A2EB", "#4BC0C0", "#FFCD56"],
-      },
-    ],
-  };
+  // const dietPieChartData = {
+  //   labels: dietData.mealLabels,
+  //   datasets: [
+  //     {
+  //       data: dietData.mealCalories,
+  //       backgroundColor: ["#FF9F40", "#36A2EB", "#4BC0C0", "#FFCD56"],
+  //       hoverBackgroundColor: ["#FF9F40", "#36A2EB", "#4BC0C0", "#FFCD56"],
+  //     },
+  //   ],
+  // };
 
-  const wellbeingPieChartData = {
-    labels: ["Good", "Fair", "Excellent"],
-    datasets: [
-      {
-        data: wellbeingData.sleepMoodCounts,
-        backgroundColor: ["#FF9F40", "#36A2EB", "#FFCE56"],
-        hoverBackgroundColor: ["#FF9F40", "#36A2EB", "#FFCE56"],
-      },
-    ],
-  };
+  // const wellbeingPieChartData = {
+  //   labels: ["Good", "Fair", "Excellent"],
+  //   datasets: [
+  //     {
+  //       data: wellbeingData.sleepMoodCounts,
+  //       backgroundColor: ["#FF9F40", "#36A2EB", "#FFCE56"],
+  //       hoverBackgroundColor: ["#FF9F40", "#36A2EB", "#FFCE56"],
+  //     },
+  //   ],
+  // };
   // Mock user data
   // const userInfo = {
   //   username: "John Doe",
@@ -522,8 +522,7 @@ const fetchData = async () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 mt-8 md:grid-cols-3 gap-8">
-        {/* Fitness Section */}
+      {/* <div className="grid grid-cols-1 mt-8 md:grid-cols-3 gap-8">
         <div className="bg-Grey hover:scale-105 transition bg-opacity-40 backdrop-blur-lg p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold text-Quaternary mb-4 flex items-center space-x-2">
             Fitness Overview <IconGym />
@@ -550,13 +549,8 @@ const fetchData = async () => {
             ))}
           </ul>
           <Line data={fitnessChartData} options={{ responsive: true }} />
-          {/* <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
-            Workout Type Distribution
-          </h3> */}
-          {/* <Pie data={fitnessPieChartData} options={{ responsive: true }} /> */}
         </div>
 
-        {/* Diet Section */}
         <div className="bg-Grey bg-opacity-40 hover:scale-105 transition backdrop-blur-lg p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold text-Quaternary mb-4 flex items-center space-x-2">
             Diet Overview <IconFoodOutline />
@@ -575,13 +569,8 @@ const fetchData = async () => {
             ))}
           </ul>
           <Bar data={dietChartData} options={{ responsive: true }} />
-          {/* <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
-            Meal Calorie Distribution
-          </h3> */}
-          {/* <Pie data={dietPieChartData} options={{ responsive: true }} /> */}
         </div>
 
-        {/* Wellbeing Section */}
         <div className="bg-Grey bg-opacity-40 hover:scale-105 transition backdrop-blur-lg p-6 rounded-lg shadow-md ">
           <h2 className="text-2xl font-semibold text-Quaternary mb-4 flex items-center space-x-2 ">
             Wellbeing Overview <IconMentalHealthFill />
@@ -593,14 +582,9 @@ const fetchData = async () => {
             Mood: {wellbeingData.mood}
           </p>
           <Line data={wellbeingChartData} options={{ responsive: true }} />
-          {/* <h3 className="text-xl font-semibold text-Quaternary mt-6 mb-4">
-            Mood Distribution
-          </h3> */}
-          {/* <Pie data={wellbeingPieChartData} options={{ responsive: true }} /> */}
         </div>
       </div>
 
-      {/* Weekly Summary */}
       <div className="bg-Grey bg-opacity-40 backdrop-blur-lg text-Secondary mt-8 p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold mb-4">Weekly Summary</h2>
         <p className="font-medium">
@@ -620,7 +604,7 @@ const fetchData = async () => {
         <p className="font-medium">
           Average Daily Sleep: {weeklyAverageSleep} hrs
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };
