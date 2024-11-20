@@ -70,7 +70,7 @@ const Fitness = () => {
   // Add a custom workout
   const addCustomWorkout = async (customWorkout) => {
     setWorkoutList([...workoutList, customWorkout]);
-    await addEachWorkout(customWorkout);
+    await addEachCustomWorkout(customWorkout);
   };
 
   // Calculate total calories whenever workoutList changes
@@ -97,6 +97,20 @@ const Fitness = () => {
           "Content-Type": "application/json",
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
+      }
+    );
+  };
+
+  const addEachCustomWorkout = async (workoutWithDetails) => {
+    await fetch(
+      `http://localhost:9088/health/fitness/${sessionStorage.getItem("userId")}/add-custom-workout`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
+        body: JSON.stringify(workoutWithDetails)
       }
     );
   };
