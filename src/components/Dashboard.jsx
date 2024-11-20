@@ -44,6 +44,40 @@ const Dashboard = () => {
   const { isLoggedIn } = useAuth();
 
   // Fetch user data from userService
+  const fetchUserData = async () => {
+    const userId = sessionStorage.getItem("userId");
+    if (!userId) {
+      setError("User ID not found in session storage.");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:9088/user/${sessionStorage.getItem(
+          "userId"
+        )}/get-details`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch user data.");
+      }
+
+      const data = await response.json();
+      setUserInfo(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 const fetchData = async () => {
   const userId = sessionStorage.getItem("userId");
   try {
@@ -104,6 +138,7 @@ const fetchData = async () => {
     setLoading(false);
   }
 };
+
   useEffect(() => {
     fetchUserData();
     fetchData();
