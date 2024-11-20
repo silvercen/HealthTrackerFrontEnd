@@ -98,7 +98,7 @@ const Dashboard = () => {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         }),
-        fetch(`https://localhost:9088/wellbeing/date?userId=${userId}`, {
+        fetch(`https://localhost:9088/wellbeing/${userId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
