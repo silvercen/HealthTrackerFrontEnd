@@ -83,10 +83,10 @@ const Navbar = () => {
             onClick={() => navigate("/")}
           >
             <IconHeartbeat
-              style={{ width: "24px", height: "24px", color: "#ff0000" }}
+              style={{ width: "30px", height: "30px", color: "#ff0000" }}
             />
             <span
-              className="text-Secondary ml-2 text-xl font-geist font-semibold"
+              className="text-Secondary ml-2 text-3xl font-geist font-semibold"
               style={{ cursor: "pointer" }}
             >
               Vitalis
