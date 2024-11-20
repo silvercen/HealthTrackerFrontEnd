@@ -23,7 +23,10 @@ const Login = () => {
       })
         .then((response) => response.text())
         .then((token) => {
-          Token = token;
+          if(token === "User not authenticated") {
+            setError("Invalid email or password");
+            return false;
+          }
           sessionStorage.setItem("token", token);
         });
       return true;
