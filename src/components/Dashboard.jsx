@@ -44,107 +44,66 @@ const Dashboard = () => {
   const { isLoggedIn } = useAuth();
 
   // Fetch user data from userService
-  const fetchUserData = async () => {
-    const userId = sessionStorage.getItem("userId");
-    if (!userId) {
-      setError("User ID not found in session storage.");
-      setLoading(false);
-      return;
+const fetchData = async () => {
+  const userId = sessionStorage.getItem("userId");
+  try {
+    setLoading(true);
+
+    const [fitnessRes, dietRes, wellbeingRes] = await Promise.all([
+      fetch(`https://localhost:9088/health/fitness/${userId}/get-workout`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }),
+      fetch(`https://localhost:9088/diet/${userId}/get-diet`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }),
+      fetch(`https://localhost:9088/wellbeing/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }),
+    ]);
+
+    if (!fitnessRes.ok || !dietRes.ok || !wellbeingRes.ok) {
+      throw new Error("Failed to fetch data from one or more services.");
     }
 
-    try {
-      const response = await fetch(
-        `http://localhost:9088/user/${sessionStorage.getItem(
-          "userId"
-        )}/get-details`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch user data.");
-      }
+    const [fitnessData, dietData, wellbeingData] = await Promise.all([
+      fitnessRes.json(),
+      dietRes.json(),
+      wellbeingRes.json(),
+    ]);
 
-      const data = await response.json();
-      setUserInfo(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setFitnessData(fitnessData);
+    setDietData(dietData);
+    setWellbeingData(wellbeingData);
 
-  const fetchData = async () => {
-    const userId = sessionStorage.getItem("userId");
-    try {
-      setLoading(true);
+    // Directly access the first available log (if any)
+    const todaysWorkout =
+      fitnessData.logs?.[0]?.workout || "No workout logged.";
+    const todaysFood = dietData.logs?.[0]?.food || "No meals logged.";
+    const todaysMood = wellbeingData.logs?.[0]?.mood || "No mood logged.";
 
-      const [fitnessRes, dietRes, wellbeingRes] = await Promise.all([
-        fetch(`https://localhost:9088/health/fitness/${userId}/get-workout`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }),
-        fetch(`https://localhost:9088/diet/${userId}/get-diet`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }),
-        fetch(`https://localhost:9088/wellbeing/${userId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        }),
-      ]);
-
-      if (!fitnessRes.ok || !dietRes.ok || !wellbeingRes.ok) {
-        throw new Error("Failed to fetch data from one or more services.");
-      }
-
-      const [fitnessData, dietData, wellbeingData] = await Promise.all([
-        fitnessRes.json(),
-        dietRes.json(),
-        wellbeingRes.json(),
-      ]);
-
-      setFitnessData(fitnessData);
-      setDietData(dietData);
-      setWellbeingData(wellbeingData);
-
-      // Extract today's log
-      const today = new Date().toISOString().split("T")[0];
-      const todaysWorkout =
-        fitnessData.logs.find((log) => log.date === today)?.workout ||
-        "No workout logged today.";
-      const todaysFood =
-        dietData.logs.find((log) => log.date === today)?.food ||
-        "No meals logged today.";
-      const todaysMood =
-        wellbeingData.logs.find((log) => log.date === today)?.mood ||
-        "No mood logged today.";
-
-      setTodaysLog({
-        workout: todaysWorkout,
-        food: todaysFood,
-        mood: todaysMood,
-      });
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+    setTodaysLog({
+      workout: todaysWorkout,
+      food: todaysFood,
+      mood: todaysMood,
+    });
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
   useEffect(() => {
     fetchUserData();
     fetchData();
