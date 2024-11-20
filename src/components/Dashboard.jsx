@@ -35,9 +35,13 @@ ChartJS.register(
 
 const Dashboard = () => {
   const [userInfo, setUserInfo] = useState(null);
+  const [fitnessData, setFitnessData] = useState(null);
+  const [dietData, setDietData] = useState(null);
+  const [wellbeingData, setWellbeingData] = useState(null);
+  const [todaysLog, setTodaysLog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const {isLoggedIn} = useAuth();
+  const { isLoggedIn } = useAuth();
 
   // Fetch user data from userService
   const fetchUserData = async () => {
@@ -49,14 +53,18 @@ const Dashboard = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:9088/user/${sessionStorage.getItem('userId')}/get-details`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    });
+      const response = await fetch(
+        `http://localhost:9088/user/${sessionStorage.getItem(
+          "userId"
+        )}/get-details`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch user data.");
       }
@@ -70,9 +78,81 @@ const Dashboard = () => {
     }
   };
 
+  const fetchData = async () => {
+    const userId = sessionStorage.getItem("userId");
+    try {
+      setLoading(true);
+
+      const [fitnessRes, dietRes, wellbeingRes] = await Promise.all([
+        fetch(`https://localhost:9088/health/fitness/${userId}/get-workout`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }),
+        fetch(`https://localhost:9088/diet/${userId}/get-diet`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }),
+        fetch(`https://localhost:9088/wellbeing/date?userId=${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }),
+      ]);
+
+      if (!fitnessRes.ok || !dietRes.ok || !wellbeingRes.ok) {
+        throw new Error("Failed to fetch data from one or more services.");
+      }
+
+      const [fitnessData, dietData, wellbeingData] = await Promise.all([
+        fitnessRes.json(),
+        dietRes.json(),
+        wellbeingRes.json(),
+      ]);
+
+      setFitnessData(fitnessData);
+      setDietData(dietData);
+      setWellbeingData(wellbeingData);
+
+      // Extract today's log
+      const today = new Date().toISOString().split("T")[0];
+      const todaysWorkout =
+        fitnessData.logs.find((log) => log.date === today)?.workout ||
+        "No workout logged today.";
+      const todaysFood =
+        dietData.logs.find((log) => log.date === today)?.food ||
+        "No meals logged today.";
+      const todaysMood =
+        wellbeingData.logs.find((log) => log.date === today)?.mood ||
+        "No mood logged today.";
+
+      setTodaysLog({
+        workout: todaysWorkout,
+        food: todaysFood,
+        mood: todaysMood,
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchUserData();
+    fetchData();
   }, [isLoggedIn]);
+
+  // Render logic
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   // Calculate BMR and calories required
   const calculateBMR = () => {
@@ -109,50 +189,50 @@ const Dashboard = () => {
   //   return <div>Error: {error}</div>;
   // }
 
-  const fitnessData = {
-    totalWorkouts: 20,
-    totalCaloriesBurned: 1500,
-    recentWorkouts: [
-      { name: "Running", duration: "30 mins", caloriesBurned: 300 },
-      { name: "Cycling", duration: "45 mins", caloriesBurned: 400 },
-      { name: "Yoga", duration: "60 mins", caloriesBurned: 200 },
-    ],
-    workoutHistory: [
-      300, 400, 500, 600, 700, 800, 750, 600, 500, 400, 300, 600,
-    ],
-    workoutTypes: ["Running", "Cycling", "Yoga"],
-    workoutCalories: [300, 400, 200],
-  };
+  // const fitnessData = {
+  //   totalWorkouts: 20,
+  //   totalCaloriesBurned: 1500,
+  //   recentWorkouts: [
+  //     { name: "Running", duration: "30 mins", caloriesBurned: 300 },
+  //     { name: "Cycling", duration: "45 mins", caloriesBurned: 400 },
+  //     { name: "Yoga", duration: "60 mins", caloriesBurned: 200 },
+  //   ],
+  //   workoutHistory: [
+  //     300, 400, 500, 600, 700, 800, 750, 600, 500, 400, 300, 600,
+  //   ],
+  //   workoutTypes: ["Running", "Cycling", "Yoga"],
+  //   workoutCalories: [300, 400, 200],
+  // };
 
-  const dietData = {
-    totalCaloriesConsumed: 2200,
-    meals: [
-      { meal: "Breakfast", calories: 500 },
-      { meal: "Lunch", calories: 800 },
-      { meal: "Dinner", calories: 700 },
-      { meal: "Snacks", calories: 200 },
-    ],
-    dailyCalories: [2000, 2200, 2300, 2100, 2400, 2500, 2200, 2100],
-    mealLabels: ["Breakfast", "Lunch", "Dinner", "Snacks"],
-    mealCalories: [500, 800, 700, 200],
-  };
+  // const dietData = {
+  //   totalCaloriesConsumed: 2200,
+  //   meals: [
+  //     { meal: "Breakfast", calories: 500 },
+  //     { meal: "Lunch", calories: 800 },
+  //     { meal: "Dinner", calories: 700 },
+  //     { meal: "Snacks", calories: 200 },
+  //   ],
+  //   dailyCalories: [2000, 2200, 2300, 2100, 2400, 2500, 2200, 2100],
+  //   mealLabels: ["Breakfast", "Lunch", "Dinner", "Snacks"],
+  //   mealCalories: [500, 800, 700, 200],
+  // };
 
-  const wellbeingData = {
-    hoursOfSleep: 7.5,
-    waterIntake: 2.5,
-    mood: "Good",
-    weeklySleep: [7, 7.5, 8, 6.5, 7, 7.5, 8],
-    sleepMood: [
-      "Good",
-      "Good",
-      "Excellent",
-      "Fair",
-      "Good",
-      "Good",
-      "Excellent",
-    ],
-    sleepMoodCounts: [2, 1, 4],
-  };
+  // const wellbeingData = {
+  //   hoursOfSleep: 7.5,
+  //   waterIntake: 2.5,
+  //   mood: "Good",
+  //   weeklySleep: [7, 7.5, 8, 6.5, 7, 7.5, 8],
+  //   sleepMood: [
+  //     "Good",
+  //     "Good",
+  //     "Excellent",
+  //     "Fair",
+  //     "Good",
+  //     "Good",
+  //     "Excellent",
+  //   ],
+  //   sleepMoodCounts: [2, 1, 4],
+  // };
 
   // Utility to format the date (YYYY-MM-DD)
   const formatDate = (date) => date.toISOString().split("T")[0];
@@ -183,7 +263,7 @@ const Dashboard = () => {
   ];
 
   // Find today's log
-  const todaysLog = dailyLogs.find((log) => log.date === todayDate);
+  // const todaysLog = dailyLogs.find((log) => log.date === todayDate);
 
   const maintenanceCalories = 1800;
 
@@ -420,6 +500,7 @@ const Dashboard = () => {
       </div>
 
       {/* Today's Activity Section */}
+      {/* Today's Activity Section */}
       <div className="bg-Grey bg-opacity-40 backdrop-blur-lg mt-8 p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-Quaternary mb-4">
           Today's Activity
@@ -430,33 +511,19 @@ const Dashboard = () => {
             <h3 className="text-xl font-semibold text-Quaternary mb-2">
               Workout
             </h3>
-            {todaysLog ? (
-              <p className="text-Secondary">{todaysLog.workout}</p>
-            ) : (
-              <p className="text-Secondary">No workout logged today.</p>
-            )}
+            <p className="text-Secondary">{todaysLog?.workout}</p>
           </div>
 
           {/* Diet Card */}
           <div className="bg-White border-2 hover:scale-105 transition border-Quaternary p-4 rounded-lg shadow-md">
             <h3 className="text-xl font-semibold text-Quaternary mb-2">Diet</h3>
-            {todaysLog ? (
-              <p className="text-Secondary">{todaysLog.food}</p>
-            ) : (
-              <p className="text-Secondary">No meals logged today.</p>
-            )}
+            <p className="text-Secondary">{todaysLog?.food}</p>
           </div>
 
           {/* Mood Card */}
           <div className="bg-White p-4 border-2 hover:scale-105 transition border-Quaternary rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold   text-Quaternary mb-2">
-              Mood
-            </h3>
-            {todaysLog ? (
-              <p className="text-Secondary">{todaysLog.mood}</p>
-            ) : (
-              <p className="text-Secondary">No mood logged today.</p>
-            )}
+            <h3 className="text-xl font-semibold text-Quaternary mb-2">Mood</h3>
+            <p className="text-Secondary">{todaysLog?.mood}</p>
           </div>
         </div>
       </div>
