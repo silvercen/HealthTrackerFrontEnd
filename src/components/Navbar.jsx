@@ -24,14 +24,9 @@ const Navbar = () => {
   // }
 
   useEffect(() => {
-    if (isLoggedIn === true) {
+    console.log(sessionStorage.getItem('isLoggedIn'))
+    if (sessionStorage.getItem('isLoggedIn') === "true") {
       setContent(
-        // <img
-        //   className="h-8 w-8 rounded-full border-2 border-white hover:border-Quaternary cursor-pointer"
-        //   src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-        //   alt="Profile"
-
-        // />
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -49,7 +44,6 @@ const Navbar = () => {
       );
     } else {
       setContent(
-        // <div className="h-8 w-8 rounded-full border-2 border-white hover:border-Quaternary cursor-pointer bg-Secondary flex items-center justify-center text-white font-semibold">
         <button
           className="font-poppins bg-Grey bg-opacity-40 flex space-x-1 border-2 hover:scale-110 border-Secondary rounded-full px-2 py-1 text-Secondary hover:bg-Quaternary hover:text-Secondary"
           onClick={() => navigate("/login")}
