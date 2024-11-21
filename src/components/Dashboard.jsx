@@ -41,10 +41,15 @@ const Dashboard = () => {
   const [todaysLog, setTodaysLog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [reportData,setReportData] = useState([]);
   const { isLoggedIn } = useAuth();
-  const [mockFitnessData, setMockFitnessData] = useState([]);
-  const [mockDietData, setMockDietData] = useState([]);
-  const [mockSleepData, setMockSleepData] = useState([]);
+  // const [mockFitnessData, setMockFitnessData] = useState([]);
+  // const [mockDietData, setMockDietData] = useState([]);
+  // const [mockSleepData, setMockSleepData] = useState([]);
+
+  const [fitnessWeekData, setFitnessWeekData] = useState([]);
+  const [dietWeekData, setDietWeekData] = useState([]);
+  const [sleepWeekData, setSleepWeekData] = useState([]);
 
   // Fetch user data from userService
   const fetchUserData = async () => {
@@ -147,9 +152,81 @@ const Dashboard = () => {
     }
   };
 
+  const getLastWeekDates = () => {
+    const today = new Date();
+    const formatDate = (date) => {
+      return date.toISOString().split("T")[0] + "T00:00:00";
+    };
+    const lastWeek = Array.from({ length: 7 }, (_, i) => {
+      const date = new Date();
+      date.setDate(today.getDate() - i - 1);
+      return formatDate(date);
+    }).reverse();
+    return { startDate: lastWeek[0], endDate: lastWeek[6] };
+  };
+
+  const { startDate, endDate } = getLastWeekDates();
+
+const fetchReportData = async () => {
+  const userId = sessionStorage.getItem("userId");
+  if (!userId) {
+    setError("User ID not found in session storage.");
+    setLoading(false);
+    return;
+  }
+  try {
+    const response = await fetch(
+      `http://localhost:9088/report/get-report/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch report data: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    // Map Fitness Week Data
+    setFitnessWeekData(
+      data.fitness.map((item) => ({
+        date: item.fitnessDate.split("T")[0], // Extract date part (YYYY-MM-DD)
+        caloriesBurned: item.totalCaloriesBurned,
+      }))
+    );
+
+    // Map Diet Week Data
+    setDietWeekData(
+      data.diet.map((item) => ({
+        date: item.dietDate.split("T")[0], // Extract date part (YYYY-MM-DD)
+        caloriesConsumed: item.totalCaloriesConsumed,
+      }))
+    );
+
+    // Map Sleep Week Data
+    setSleepWeekData(
+      data.wellbeing.map((item) => ({
+        date: item.wellbeingDate, // Already in YYYY-MM-DD format
+        sleepHours: item.sleepTime,
+        mood: item.mood,
+      }))
+    );
+  } catch (error) {
+    console.error("Error fetching report data:", error);
+    setError("Failed to load weekly data. Please try again later.");
+  }
+};
+
+
   useEffect(() => {
     fetchUserData();
     fetchData();
+    fetchReportData();
   }, [isLoggedIn]);
 
   console.log("Fitness Data:", fitnessData);
@@ -183,85 +260,50 @@ const Dashboard = () => {
       })()
     : 0;
 
-    useEffect(() => {
-      // Mock weekly data for graphs
-      const mockFitness = [
-        { day: "Mon", caloriesBurned: 300 },
-        { day: "Tue", caloriesBurned: 450 },
-        { day: "Wed", caloriesBurned: 200 },
-        { day: "Thu", caloriesBurned: 400 },
-        { day: "Fri", caloriesBurned: 500 },
-        { day: "Sat", caloriesBurned: 350 },
-        { day: "Sun", caloriesBurned: 300 },
-      ];
+  // Prepare data for charts
+  const fitnessChartData = {
+    labels: fitnessWeekData ? fitnessWeekData.map((data) => data.date) : [],
+    datasets: [
+      {
+        label: "Calories Burned",
+        data: fitnessWeekData
+          ? fitnessWeekData.map((data) => data.caloriesBurned)
+          : [],
+        backgroundColor: "rgba(255, 99, 132, 0.6)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
 
-      const mockDiet = [
-        { day: "Mon", caloriesConsumed: 2000 },
-        { day: "Tue", caloriesConsumed: 1900 },
-        { day: "Wed", caloriesConsumed: 1800 },
-        { day: "Thu", caloriesConsumed: 2100 },
-        { day: "Fri", caloriesConsumed: 2200 },
-        { day: "Sat", caloriesConsumed: 2300 },
-        { day: "Sun", caloriesConsumed: 2000 },
-      ];
+  const dietChartData = {
+    labels: dietWeekData ? dietWeekData.map((data) => data.date) : [],
+    datasets: [
+      {
+        label: "Calories Consumed",
+        data: dietWeekData ? dietWeekData.map((data) => data.caloriesConsumed) : [],
+        backgroundColor: "rgba(255, 99, 132, 0.6)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
 
-      const mockSleep = [
-        { day: "Mon", sleepHours: 7 },
-        { day: "Tue", sleepHours: 6 },
-        { day: "Wed", sleepHours: 8 },
-        { day: "Thu", sleepHours: 5 },
-        { day: "Fri", sleepHours: 6 },
-        { day: "Sat", sleepHours: 9 },
-        { day: "Sun", sleepHours: 8 },
-      ];
-
-      setMockFitnessData(mockFitness);
-      setMockDietData(mockDiet);
-      setMockSleepData(mockSleep);
-    }, [isLoggedIn]);
-
-    // Prepare data for charts
-    const fitnessChartData = {
-      labels: mockFitnessData.map((data) => data.day),
-      datasets: [
-        {
-          label: "Calories Burned",
-          data: mockFitnessData.map((data) => data.caloriesBurned),
-          backgroundColor: "rgba(75, 192, 192, 0.6)",
-          borderColor: "rgba(75, 192, 192, 1)",
-          borderWidth: 1,
-        },
-      ],
-    };
-
-    const dietChartData = {
-      labels: mockDietData.map((data) => data.day),
-      datasets: [
-        {
-          label: "Calories Consumed",
-          data: mockDietData.map((data) => data.caloriesConsumed),
-          backgroundColor: "rgba(255, 99, 132, 0.6)",
-          borderColor: "rgba(255, 99, 132, 1)",
-          borderWidth: 1,
-        },
-      ],
-    };
-
-    const sleepChartData = {
-      labels: mockSleepData.map((data) => data.day),
-      datasets: [
-        {
-          label: "Sleep Hours",
-          data: mockSleepData.map((data) => data.sleepHours),
-          backgroundColor: "rgba(54, 162, 235, 0.6)",
-          borderColor: "rgba(54, 162, 235, 1)",
-          borderWidth: 1,
-        },
-      ],
-    };
-
-
-
+  const wellbeingChartData = {
+    labels: sleepWeekData ? sleepWeekData.map((data) => data.date) : [],
+    datasets: [
+      {
+        label: "Sleep Hours",
+        data: sleepWeekData ? sleepWeekData.map((data) => data.sleepHours) : [],
+        backgroundColor: "rgba(54, 162, 235, 0.6)",
+        borderColor: "rgba(54, 162, 235, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
+  console.log("Fitness week Data:", fitnessWeekData);
+  console.log("Diet week Data:", dietWeekData);
+  console.log("Wellbeing week Data:", sleepWeekData);
   // Check if user details are incomplete
   const isUserDetailsComplete =
     userInfo &&
@@ -548,7 +590,7 @@ const Dashboard = () => {
           <h2 className="text-2xl font-bold text-Quaternary mb-4">
             Weekly Sleep Report
           </h2>
-          <Bar data={sleepChartData} options={{ responsive: true }} />
+          <Bar data={wellbeingChartData} options={{ responsive: true }} />
         </div>
       </div>
     </div>
