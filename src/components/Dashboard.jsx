@@ -41,11 +41,9 @@ const Dashboard = () => {
   const [todaysLog, setTodaysLog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [reportData,setReportData] = useState([]);
+  const [reportData, setReportData] = useState([]);
+  const [reportSummary, setReportSummary] = useState([]);
   const { isLoggedIn } = useAuth();
-  // const [mockFitnessData, setMockFitnessData] = useState([]);
-  // const [mockDietData, setMockDietData] = useState([]);
-  // const [mockSleepData, setMockSleepData] = useState([]);
 
   const [fitnessWeekData, setFitnessWeekData] = useState([]);
   const [dietWeekData, setDietWeekData] = useState([]);
@@ -130,6 +128,10 @@ const Dashboard = () => {
         wellbeingRes.json(),
       ]);
 
+      // const fitnessData = await fitnessRes.json();
+      // const dietData = await dietRes.json();
+      // const wellbeingData = await wellbeingRes.json();
+
       setFitnessData(fitnessData);
       setDietData(dietData);
       setWellbeingData(wellbeingData);
@@ -152,76 +154,84 @@ const Dashboard = () => {
     }
   };
 
-  const getLastWeekDates = () => {
-    const today = new Date();
-    const formatDate = (date) => {
-      return date.toISOString().split("T")[0] + "T00:00:00";
-    };
-    const lastWeek = Array.from({ length: 7 }, (_, i) => {
-      const date = new Date();
-      date.setDate(today.getDate() - i - 1);
-      return formatDate(date);
-    }).reverse();
-    return { startDate: lastWeek[0], endDate: lastWeek[6] };
-  };
+  // const getLastWeekDates = () => {
+  //   const today = new Date();
+  //   const formatDate = (date) => {
+  //     return date.toISOString().split("T")[0] + "T00:00:00";
+  //   };
+  //   const lastWeek = Array.from({ length: 7 }, (_, i) => {
+  //     const date = new Date();
+  //     date.setDate(today.getDate() - i - 1);
+  //     return formatDate(date);
+  //   }).reverse();
+  //   return { startDate: lastWeek[0], endDate: lastWeek[6] };
+  // };
 
-  const { startDate, endDate } = getLastWeekDates();
+  // const { startDate, endDate } = getLastWeekDates();
 
-const fetchReportData = async () => {
-  const userId = sessionStorage.getItem("userId");
-  if (!userId) {
-    setError("User ID not found in session storage.");
-    setLoading(false);
-    return;
-  }
-  try {
-    const response = await fetch(
-      `http://localhost:9088/report/get-report/${userId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch report data: ${response.statusText}`);
+  const fetchReportData = async () => {
+    const userId = sessionStorage.getItem("userId");
+    if (!userId) {
+      setError("User ID not found in session storage.");
+      setLoading(false);
+      return;
     }
+    try {
+      const response = await fetch(
+        `http://localhost:9088/report/get-report/${userId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        }
+      );
 
-    const data = await response.json();
+      if (!response.ok) {
+        throw new Error(`Failed to fetch report data: ${response.statusText}`);
+      }
 
-    // Map Fitness Week Data
-    setFitnessWeekData(
-      data.fitness.map((item) => ({
-        date: item.fitnessDate.split("T")[0], // Extract date part (YYYY-MM-DD)
-        caloriesBurned: item.totalCaloriesBurned,
-      }))
-    );
+      const data = await response.json();
 
-    // Map Diet Week Data
-    setDietWeekData(
-      data.diet.map((item) => ({
-        date: item.dietDate.split("T")[0], // Extract date part (YYYY-MM-DD)
-        caloriesConsumed: item.totalCaloriesConsumed,
-      }))
-    );
+      // Map Fitness Week Data
+      setFitnessWeekData(
+        data.fitness.map((item) => ({
+          date: item.fitnessDate.split("T")[0], // Extract date part (YYYY-MM-DD)
+          caloriesBurned: item.totalCaloriesBurned,
+        }))
+      );
 
-    // Map Sleep Week Data
-    setSleepWeekData(
-      data.wellbeing.map((item) => ({
-        date: item.wellbeingDate, // Already in YYYY-MM-DD format
-        sleepHours: item.sleepTime,
-        mood: item.mood,
-      }))
-    );
-  } catch (error) {
-    console.error("Error fetching report data:", error);
-    setError("Failed to load weekly data. Please try again later.");
-  }
-};
+      // Map Diet Week Data
+      setDietWeekData(
+        data.diet.map((item) => ({
+          date: item.dietDate.split("T")[0], // Extract date part (YYYY-MM-DD)
+          caloriesConsumed: item.totalCaloriesConsumed,
+        }))
+      );
 
+      // Map Sleep Week Data
+      setSleepWeekData(
+        data.wellbeing.map((item) => ({
+          date: item.wellbeingDate, // Already in YYYY-MM-DD format
+          sleepHours: item.sleepTime,
+          mood: item.mood,
+        }))
+      );
+
+      setReportSummary([
+        {
+          CaloriesConsumedWeek: data.finalCaloriesConsumed,
+          CaloriesBurnedWeek: data.finalCaloriesBurned,
+          Status: data.status,
+          UserCalories: data.userCalorie,
+        },
+      ]);
+    } catch (error) {
+      console.error("Error fetching report data:", error);
+      setError("Failed to load weekly data. Please try again later.");
+    }
+  };
 
   useEffect(() => {
     fetchUserData();
@@ -281,7 +291,9 @@ const fetchReportData = async () => {
     datasets: [
       {
         label: "Calories Consumed",
-        data: dietWeekData ? dietWeekData.map((data) => data.caloriesConsumed) : [],
+        data: dietWeekData
+          ? dietWeekData.map((data) => data.caloriesConsumed)
+          : [],
         backgroundColor: "rgba(255, 99, 132, 0.6)",
         borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 1,
@@ -304,6 +316,7 @@ const fetchReportData = async () => {
   console.log("Fitness week Data:", fitnessWeekData);
   console.log("Diet week Data:", dietWeekData);
   console.log("Wellbeing week Data:", sleepWeekData);
+
   // Check if user details are incomplete
   const isUserDetailsComplete =
     userInfo &&
@@ -527,9 +540,9 @@ const fetchReportData = async () => {
                   return (
                     <span className="text-Quaternary font-bold">
                       You are in a calorie surplus.{" "}
-                      {userInfo.journey === "Weight Loss"
+                      {userInfo.journey === "WEIGHT_LOSS"
                         ? "This may hinder weight loss."
-                        : userInfo.journey === "Weight Gain"
+                        : userInfo.journey === "WEIGHT_GAIN"
                         ? "Great for gaining weight!"
                         : "You may gain weight."}
                     </span>
@@ -538,9 +551,9 @@ const fetchReportData = async () => {
                   return (
                     <span className="text-Quaternary font-bold">
                       You are in a calorie deficit.{" "}
-                      {userInfo.journey === "Weight Loss"
+                      {userInfo.journey === "WEIGHT_LOSS"
                         ? "This is ideal for weight loss!"
-                        : userInfo.journey === "Weight Gain"
+                        : userInfo.journey === "WEIGHT_GAIN"
                         ? "This may hinder weight gain."
                         : "You may lose weight."}
                     </span>
@@ -549,9 +562,9 @@ const fetchReportData = async () => {
                   return (
                     <span className="text-Quaternary font-bold">
                       You are meeting your maintenance calories.{" "}
-                      {userInfo.journey === "Weight Loss"
+                      {userInfo.journey === "WEIGHT_LOSS"
                         ? "Consider reducing your calories for weight loss."
-                        : userInfo.journey === "Weight Gain"
+                        : userInfo.journey === "WEIGHT_GAIN"
                         ? "Consider increasing your calories for weight gain."
                         : "You are maintaining your weight."}
                     </span>
@@ -592,6 +605,58 @@ const fetchReportData = async () => {
           </h2>
           <Bar data={wellbeingChartData} options={{ responsive: true }} />
         </div>
+      </div>
+      {/* Report Summary Section */}
+      <div className="bg-White bg-Grey bg-opacity-40 backdrop-blur-lg border-2 border-Quaternary p-6 rounded-lg shadow-md mb-8">
+        <h3 className="text-4xl font-semibold text-Quaternary mb-4">
+          Weekly Report Summary
+        </h3>
+
+        {/* Checking if reportSummary has data */}
+        {reportSummary.length > 0 ? (
+          <ul className="text-Secondary space-y-4">
+            {reportSummary.map((summary, index) => (
+              <li
+                key={index}
+                className="p-4 border-2 border-Quaternary rounded-lg"
+              >
+                <p>
+                  <strong>Calories Consumed This Week:</strong>{" "}
+                  <span className="text-Quaternary">
+                    {summary.CaloriesConsumedWeek}
+                  </span>
+                </p>
+                <p>
+                  <strong>Calories Burned This Week:</strong>{" "}
+                  <span className="text-Quaternary">
+                    {summary.CaloriesBurnedWeek}
+                  </span>
+                </p>
+                <p>
+                  <strong>Overall Status:</strong>{" "}
+                  <span
+                    className={`font-bold ${
+                      summary.Status === "Healthy"
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {summary.Status}
+                  </span>
+                </p>
+                <p>
+                  <strong>Your Calories:</strong>{" "}
+                  <span className="text-Quaternary">
+                    {summary.UserCalories}
+                  </span>{" "}
+                  kcal
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-Secondary">No report summary available.</p>
+        )}
       </div>
     </div>
   );
