@@ -116,7 +116,6 @@ const AccountPage = () => {
     user.gender = gender;
 
     await sendUser(user)
-    alert("Account Updated Successfully");
 
     // Switch back to account info tab after update
     setActiveTab("accountInfo");
@@ -173,7 +172,6 @@ const AccountPage = () => {
     // Add your logout logic here (e.g., clearing tokens, state, etc.)
     sessionStorage.clear();
     logout();
-    alert("Logged Out Successfully");
     // Redirect to the home page after logout
     navigate("/login"); // Redirect to login page
   };
@@ -309,9 +307,9 @@ const AccountPage = () => {
                     onChange={(e) => setJourney(e.target.value)}
                     className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                   >
-                    <option value="Maintainance">Maintainance</option>
-                    <option value="WeightLoss">WeightLoss</option>
-                    <option value="WeightGain">WeightGain</option>
+                    <option value="MAINTAIN">Maintainance</option>
+                    <option value="WEIGHT_LOSS">WeightLoss</option>
+                    <option value="WEIGHT_GAIN">WeightGain</option>
                   </select>
                 </div>
 
