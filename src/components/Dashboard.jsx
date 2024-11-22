@@ -409,8 +409,8 @@ const Dashboard = () => {
               <p>
                 <strong>Net Calories:</strong>{" "}
                 <span className="text-Quaternary">
-                  {dietData.totalCaloriesConsumed -
-                    fitnessData.totalCaloriesBurned.toFixed(2)}
+                  {(dietData.totalCaloriesConsumed.toFixed(2) -
+                    fitnessData.totalCaloriesBurned.toFixed(2)).toFixed(2)}
                 </span>{" "}
                 kcal
               </p>

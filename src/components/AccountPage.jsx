@@ -116,7 +116,6 @@ const AccountPage = () => {
     user.gender = gender;
 
     await sendUser(user)
-    alert("Account Updated Successfully");
 
     // Switch back to account info tab after update
     setActiveTab("accountInfo");
