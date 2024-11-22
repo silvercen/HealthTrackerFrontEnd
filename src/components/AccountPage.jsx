@@ -172,7 +172,6 @@ const AccountPage = () => {
     // Add your logout logic here (e.g., clearing tokens, state, etc.)
     sessionStorage.clear();
     logout();
-    alert("Logged Out Successfully");
     // Redirect to the home page after logout
     navigate("/login"); // Redirect to login page
   };

@@ -532,7 +532,7 @@ const Dashboard = () => {
                 <p>
                   <strong>Your Calories:</strong>{" "}
                   <span className="text-Quaternary">
-                    {summary.UserCalories.toFixed(2)}
+                    {summary.UserCalories.toFixed(2)/7}
                   </span>{" "}
                   kcal
                 </p>
